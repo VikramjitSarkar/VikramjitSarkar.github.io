@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vikramjit · I test local AI on real laptops</title>
+<meta name="description" content="Honest local AI tests on a MacBook Pro M5 32GB, an M1 8GB and RTX GPUs. Real tokens per second, real crashes, no sponsors.">
+<link rel="canonical" href="https://vikramjitsarkar.github.io/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vikramjit · I test local AI on real laptops">
+<meta property="og:description" content="Honest local AI tests on a MacBook Pro M5 32GB, an M1 8GB and RTX GPUs. Real tokens per second, real crashes, no sponsors.">
+<meta property="og:url" content="https://vikramjitsarkar.github.io/">
+<meta property="og:image" content="https://vikramjitsarkar.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@VikramjitSarkar">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --alu: #e4e6e9;        /* brushed aluminium */
+    --alu-deep: #cfd3d8;
+    --graphite: #1d2126;
+    --ink-soft: #545b64;
+    --ok: #2f9e4f;         /* memory pressure: green */
+    --warn: #d99a00;       /* memory pressure: amber */
+    --hot: #d8392f;        /* memory pressure: red */
+    --wall: #1f7bff;       /* the blue wall behind the photo */
+    --gb: calc(100% / 32); /* one gigabyte on the 32 GB bar */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--alu); color: var(--graphite); font-family: "Archivo", system-ui, sans-serif; font-variation-settings: "wdth" 100; }
+  body { line-height: 1.5; font-size: 18px; }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--wall); outline-offset: 3px; border-radius: 4px; }
+  .wrap { width: min(1180px, 100% - 40px); margin-inline: auto; }
+
+  /* ---------- hero ---------- */
+  .hero { min-height: 100vh; display: grid; grid-template-columns: 1.1fr 1fr; align-items: end; gap: 40px; padding-top: 48px; }
+  .hero-text { padding-bottom: 72px; }
+  .name { font-weight: 700; font-size: 20px; letter-spacing: .01em; margin-bottom: 40px; }
+  .name span { color: var(--ink-soft); font-weight: 400; }
+  h1 { font-size: clamp(40px, 6.4vw, 96px); line-height: .92; font-weight: 800; letter-spacing: -.02em;
+       font-variation-settings: "wdth" var(--w, 75); margin-bottom: 36px; }
+  h1 span { display: block; white-space: nowrap; } /* fixed line breaks, so stretching never reflows */
+  .meter { margin-bottom: 18px; }
+  .meter-top { display: flex; justify-content: space-between; font-size: 15px; color: var(--ink-soft); margin-bottom: 8px; font-variant-numeric: tabular-nums; }
+  .meter-top b { color: var(--graphite); font-size: 22px; font-weight: 700; }
+  .bar { position: relative; height: 54px; border-radius: 10px; background: var(--alu-deep); overflow: hidden;
+         box-shadow: inset 0 2px 6px rgba(29,33,38,.18); display: flex; }
+  .seg { height: 100%; width: 0; display: flex; align-items: center; padding-left: 12px; white-space: nowrap; overflow: hidden;
+         color: #fff; font-size: 14px; font-weight: 600; border-right: 2px solid var(--alu); }
+  .seg.os { background: #4b525b; } .seg.apps { background: #79818b; }
+  .seg.model { background: var(--wall); } .seg.ctx { background: var(--warn); }
+  .bar.hot { animation: pressure .45s ease-in-out 3; }
+  @keyframes pressure { 50% { box-shadow: inset 0 0 0 4px var(--hot), 0 0 0 6px rgba(216,57,47,.25); } }
+  .story { font-size: 22px; line-height: 1.35; max-width: 40ch; min-height: 3em; }
+  .story .crash { color: var(--hot); font-weight: 700; }
+  .hero-photo { align-self: end; height: min(86vh, 880px); position: relative; display: flex; align-items: flex-end; justify-content: center;
+                background: var(--wall); border-radius: 0 0 0 0; overflow: hidden; }
+  .hero-photo::before { content: ""; position: absolute; inset: 0;
+                        background: radial-gradient(120% 70% at 50% 100%, rgba(255,255,255,.22), transparent 60%); }
+  .hero-photo img { position: relative; height: min(70vh, 720px); width: auto; max-width: none; display: block; }
+  .hero-photo figcaption { position: absolute; left: 20px; top: 20px; color: #fff; font-size: 15px; font-weight: 600; }
+
+  /* ---------- machines ---------- */
+  section { padding: 110px 0; }
+  h2 { font-size: clamp(34px, 4.4vw, 56px); line-height: 1; font-weight: 800; letter-spacing: -.015em;
+       font-variation-settings: "wdth" 112; margin-bottom: 14px; }
+  .lead { color: var(--ink-soft); max-width: 60ch; margin-bottom: 48px; }
+  .machines { display: grid; gap: 22px; }
+  .machine { display: grid; grid-template-columns: 260px 1fr 90px; align-items: center; gap: 24px; }
+  .machine h3 { font-size: 20px; font-weight: 700; font-variation-settings: "wdth" 100; }
+  .machine p { color: var(--ink-soft); font-size: 15px; }
+  .cap { height: 18px; background: var(--alu-deep); border-radius: 9px; overflow: hidden; }
+  .cap i { display: block; height: 100%; background: var(--graphite); border-radius: 9px; }
+  .machine.main .cap i { background: var(--wall); }
+  .gb { font-size: 26px; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; font-variation-settings: "wdth" 70; }
+
+  /* ---------- numbers ---------- */
+  .numbers { background: var(--graphite); color: #f2f4f6; }
+  .numbers .lead { color: #aab2bc; }
+  .runs { display: grid; gap: 26px; margin-bottom: 64px; }
+  .run { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: center; }
+  .run h3 { font-size: 18px; font-weight: 700; }
+  .run p { font-size: 14px; color: #aab2bc; }
+  .speed { display: flex; align-items: center; gap: 14px; }
+  .speed i { height: 26px; background: var(--ok); border-radius: 4px; width: calc(var(--tps) * 1.6%); min-width: 6px; }
+  .speed b { font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; font-variation-settings: "wdth" 70; }
+  .speed small { color: #aab2bc; font-size: 14px; }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; border-top: 1px solid #3a4048; padding-top: 40px; }
+  .fact b { display: block; font-size: 44px; line-height: 1; font-weight: 800; font-variation-settings: "wdth" 75; margin-bottom: 10px; }
+  .fact p { color: #aab2bc; max-width: 40ch; }
+
+  /* ---------- videos ---------- */
+  .videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .video { text-decoration: none; }
+  .video img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 10px; display: block; margin-bottom: 14px;
+               transition: transform .2s ease; }
+  .video:hover img { transform: translateY(-3px); }
+  .video h3 { font-size: 18px; line-height: 1.3; font-weight: 700; margin-bottom: 4px; }
+  .video p { font-size: 14px; color: var(--ink-soft); }
+
+  /* ---------- footer ---------- */
+  footer { padding: 90px 0 70px; border-top: 1px solid var(--alu-deep); }
+  footer h2 { margin-bottom: 26px; }
+  .links { display: flex; flex-wrap: wrap; gap: 14px; }
+  .links a { text-decoration: none; font-weight: 700; padding: 14px 22px; border-radius: 999px; background: var(--graphite); color: #fff; }
+  .links a.yt { background: var(--hot); }
+  .small { margin-top: 40px; font-size: 14px; color: var(--ink-soft); }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-text { padding-bottom: 20px; }
+    .hero-photo { min-height: 360px; height: auto; } .hero-photo img { height: 340px; }
+    .machine { grid-template-columns: 1fr 70px; }
+    .machine .cap { grid-column: 1 / -1; grid-row: 2; }
+    .run { grid-template-columns: 1fr; gap: 8px; }
+    .facts, .videos { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { .bar.hot { animation: none; } .video img { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <header class="wrap hero">
+    <div class="hero-text">
+      <p class="name">Vikramjit <span>· IamVikramjit</span></p>
+      <h1 id="headline"><span>I test local</span><span>AI on the</span><span>laptop on</span><span>your desk.</span></h1>
+      <div class="meter" aria-hidden="true">
+        <div class="meter-top"><span>Memory used on my MacBook Pro M5</span><span><b id="used">0</b> of 32 GB</span></div>
+        <div class="bar" id="bar">
+          <div class="seg os" data-gb="6">macOS</div>
+          <div class="seg apps" data-gb="3">Apps</div>
+          <div class="seg model" data-gb="16">Qwen 3.8 27B</div>
+          <div class="seg ctx" data-gb="6">Context</div>
+        </div>
+      </div>
+      <p class="story" id="story">Real models, real numbers, real crashes. No sponsors.</p>
+    </div>
+    <figure class="hero-photo">
+      <figcaption>My desk, where every test is filmed</figcaption>
+      <img src="me.png" alt="Vikramjit at the desk, thinking, wearing earphones" width="880" height="720">
+    </figure>
+  </header>
+
+  <section class="wrap" aria-labelledby="machines-title">
+    <h2 id="machines-title">The machines I test on</h2>
+    <p class="lead">No cloud. Every result on this page comes from one of these four machines. The bar is how much memory each one has for AI.</p>
+    <div class="machines">
+      <div class="machine main"><div><h3>MacBook Pro M5</h3><p>My main test laptop</p></div><div class="cap"><i style="width:100%"></i></div><div class="gb">32 GB</div></div>
+      <div class="machine"><div><h3>RTX 4080 desktop</h3><p>NVIDIA, for the Mac vs PC tests</p></div><div class="cap"><i style="width:50%"></i></div><div class="gb">16 GB</div></div>
+      <div class="machine"><div><h3>MacBook Pro M1</h3><p>The old one, still running</p></div><div class="cap"><i style="width:25%"></i></div><div class="gb">8 GB</div></div>
+      <div class="machine"><div><h3>RTX 4050 laptop</h3><p>The gaming laptop limit</p></div><div class="cap"><i style="width:18.75%"></i></div><div class="gb">6 GB</div></div>
+    </div>
+  </section>
+
+  <section class="numbers" aria-labelledby="numbers-title">
+    <div class="wrap">
+      <h2 id="numbers-title">Numbers from my own tests</h2>
+      <p class="lead">Tokens per second: how fast the AI writes. Around 15 is easy to read along with; 40 feels instant.</p>
+      <div class="runs">
+        <div class="run"><div><h3>Gemma 4 E2B</h3><p>MacBook Pro M1 8GB · LM Studio</p></div><div class="speed" style="--tps:26"><i></i><b>26</b><small>tok/s</small></div></div>
+        <div class="run"><div><h3>Gemma 4 E2B</h3><p>MacBook Pro M5 32GB · LM Studio</p></div><div class="speed" style="--tps:54"><i></i><b>54</b><small>tok/s</small></div></div>
+        <div class="run"><div><h3>Qwen 3.6 35B-A3B</h3><p>M5 32GB · mixture of experts</p></div><div class="speed" style="--tps:40"><i></i><b>40</b><small>tok/s</small></div></div>
+        <div class="run"><div><h3>Qwen 3.8 27B</h3><p>M5 32GB · dense, best run</p></div><div class="speed" style="--tps:17.5"><i></i><b>17.5</b><small>tok/s</small></div></div>
+      </div>
+      <div class="facts">
+        <div class="fact"><b>20 s vs 7 s</b><p>Reloading the AI's memory after a restart: LM Studio against oMLX, same model and prompt.</p></div>
+        <div class="fact"><b>5 min vs 12 min</b><p>Longest single answer: LM Studio stopped at five minutes, oMLX kept going for almost twelve.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="videos-title">
+    <h2 id="videos-title">Start with these</h2>
+    <p class="lead">Three good places to start.</p>
+    <div class="videos">
+      <a class="video" href="https://youtu.be/HW0RPmkJMgE"><img src="https://i.ytimg.com/vi/HW0RPmkJMgE/hqdefault.jpg" alt=""><h3>Local LLM vibe coding on a MacBook Pro M5: the honest truth</h3><p>The test that started the channel</p></a>
+      <a class="video" href="https://youtu.be/AznjSh5IHFs"><img src="https://i.ytimg.com/vi/AznjSh5IHFs/hqdefault.jpg" alt=""><h3>How to run local AI coding on Mac for free</h3><p>4-minute setup guide</p></a>
+      <a class="video" href="https://youtu.be/Prww8NdNQIo"><img src="https://i.ytimg.com/vi/Prww8NdNQIo/hqdefault.jpg" alt=""><h3>Qwen 3.8 27B: stuck 82 minutes, then built Minecraft</h3><p>82 minutes stuck, then a working game</p></a>
+    </div>
+  </section>
+
+  <footer class="wrap">
+    <h2>Watch the next test</h2>
+    <div class="links">
+      <a class="yt" href="https://www.youtube.com/@IamVikramjit">YouTube: IamVikramjit</a>
+      <a href="https://www.instagram.com/iam.vikramjit/">Instagram: @iam.vikramjit</a>
+      <a href="https://x.com/VikramjitSarkar">X: @VikramjitSarkar</a>
+    </div>
+    <p class="small">Every number here is from my own runs. If yours differ, tell me your Mac and RAM in the comments.</p>
+  </footer>
+</main>
+
+<script>
+  // One orchestrated moment: the 32 GB bar fills like my real crash, then settles.
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const segs = [...document.querySelectorAll('.seg')];
+  const used = document.getElementById('used');
+  const story = document.getElementById('story');
+  const head = document.getElementById('headline');
+  const bar = document.getElementById('bar');
+  const total = segs.reduce((s, el) => s + +el.dataset.gb, 0); // 31
+
+  function finalState() {
+    segs.forEach(el => el.style.width = `calc(var(--gb) * ${el.dataset.gb})`);
+    used.textContent = total;
+    head.style.setProperty('--w', 125);
+  }
+
+  if (reduce) { finalState(); }
+  else {
+    let gb = 0, t = 400;
+    segs.forEach(el => {
+      const n = +el.dataset.gb, dur = n * 140;
+      setTimeout(() => {
+        el.style.transition = `width ${dur}ms cubic-bezier(.3,.7,.3,1)`;
+        el.style.width = `calc(var(--gb) * ${n})`;
+        const from = gb, start = performance.now();
+        (function tick(now) {
+          const p = Math.min(1, (now - start) / dur);
+          const v = from + n * p;
+          used.textContent = Math.round(v);
+          head.style.setProperty('--w', 75 + (v / 32) * 50);   // the headline stretches as memory fills
+          if (p < 1) requestAnimationFrame(tick);
+        })(start);
+        gb += n;
+      }, t);
+      t += dur + 120;
+    });
+    setTimeout(() => {
+      bar.classList.add('hot');
+      story.innerHTML = '<span class="crash">31 of 32 GB. Then my MacBook shut down.</span>';
+    }, t + 100);
+    setTimeout(() => { story.textContent = 'So now I test every model first, and show you exactly what fits.'; }, t + 2600);
+  }
+</script>
+</body>
+</html>
