@@ -2,240 +2,775 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vikramjit · I test local AI on real laptops</title>
-<meta name="description" content="Honest local AI tests on a MacBook Pro M5 32GB, an M1 8GB and RTX GPUs. Real tokens per second, real crashes, no sponsors.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IamVikramjit · Local AI Lab</title>
+<meta name="description" content="I test local AI on real laptops: MacBook Pro M5 32GB, M1 8GB, RTX 4080 and RTX 4050. Real tokens per second, real crashes, no sponsors.">
+<meta name="theme-color" content="#16100d">
 <link rel="canonical" href="https://vikramjitsarkar.github.io/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Vikramjit · I test local AI on real laptops">
-<meta property="og:description" content="Honest local AI tests on a MacBook Pro M5 32GB, an M1 8GB and RTX GPUs. Real tokens per second, real crashes, no sponsors.">
+<meta property="og:title" content="IamVikramjit · I test local AI on real laptops">
+<meta property="og:description" content="Real models, real tokens per second, real crashes. Honest local AI tests on a MacBook Pro M5 32GB, M1 8GB and RTX GPUs.">
 <meta property="og:url" content="https://vikramjitsarkar.github.io/">
 <meta property="og:image" content="https://vikramjitsarkar.github.io/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@VikramjitSarkar">
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@graph": [
+  { "@type": "WebSite", "@id": "https://vikramjitsarkar.github.io/#site", "url": "https://vikramjitsarkar.github.io/", "name": "IamVikramjit · Local AI Lab", "publisher": { "@id": "https://vikramjitsarkar.github.io/#me" } },
+  { "@type": "Person", "@id": "https://vikramjitsarkar.github.io/#me", "name": "Vikramjit Sarkar", "alternateName": "IamVikramjit", "jobTitle": "Developer and tech creator",
+    "url": "https://vikramjitsarkar.github.io/", "image": "https://vikramjitsarkar.github.io/portrait_arms.png",
+    "sameAs": ["https://www.youtube.com/@IamVikramjit", "https://www.instagram.com/iam.vikramjit/", "https://x.com/VikramjitSarkar"],
+    "knowsAbout": ["Local LLMs", "Apple Silicon", "MLX", "LM Studio", "Qwen", "Gemma", "AI coding agents", "GPU benchmarks"] } ] }
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --alu: #e4e6e9;        /* brushed aluminium */
-    --alu-deep: #cfd3d8;
-    --graphite: #1d2126;
-    --ink-soft: #545b64;
-    --ok: #2f9e4f;         /* memory pressure: green */
-    --warn: #d99a00;       /* memory pressure: amber */
-    --hot: #d8392f;        /* memory pressure: red */
-    --wall: #1f7bff;       /* the blue wall behind the photo */
-    --gb: calc(100% / 32); /* one gigabyte on the 32 GB bar */
-  }
+  /* Mocha Copper Luxe */
+  :root { --bg: #16100d; --bg2: #1d1511; --panel: rgba(34,24,18,.78); --line: rgba(245,235,221,.1);
+          --ink: #f5ebdd; --soft: #c2ad98; --dim: #8a7564;
+          --copper: #e0915a; --copper-hi: #ffd2a8; --copper-lo: #b8562f; --mocha: #7a5e4b; --oxblood: #5e1f23; --hot: #ff5a3d; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { background: var(--alu); color: var(--graphite); font-family: "Archivo", system-ui, sans-serif; font-variation-settings: "wdth" 100; }
-  body { line-height: 1.5; font-size: 18px; }
-  a { color: inherit; }
-  a:focus-visible, button:focus-visible { outline: 3px solid var(--wall); outline-offset: 3px; border-radius: 4px; }
-  .wrap { width: min(1180px, 100% - 40px); margin-inline: auto; }
+  html { background: var(--bg); color: var(--ink); font-family: "Archivo", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  body { overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--copper); color: #1b120d; }
+  a:focus-visible { outline: 3px solid var(--copper-hi); outline-offset: 4px; border-radius: 8px; }
+  .wrap { width: min(1240px, 100% - 48px); margin-inline: auto; position: relative; }
+  #gl { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100lvh; z-index: 0; display: block; }
+  main { position: relative; z-index: 1; overflow-x: clip; }
 
-  /* ---------- hero ---------- */
-  .hero { min-height: 100vh; display: grid; grid-template-columns: 1.1fr 1fr; align-items: end; gap: 40px; padding-top: 48px; }
-  .hero-text { padding-bottom: 72px; }
-  .name { font-weight: 700; font-size: 20px; letter-spacing: .01em; margin-bottom: 40px; }
-  .name span { color: var(--ink-soft); font-weight: 400; }
-  h1 { font-size: clamp(40px, 6.4vw, 96px); line-height: .92; font-weight: 800; letter-spacing: -.02em;
-       font-variation-settings: "wdth" var(--w, 75); margin-bottom: 36px; }
-  h1 span { display: block; white-space: nowrap; } /* fixed line breaks, so stretching never reflows */
-  .meter { margin-bottom: 18px; }
-  .meter-top { display: flex; justify-content: space-between; font-size: 15px; color: var(--ink-soft); margin-bottom: 8px; font-variant-numeric: tabular-nums; }
-  .meter-top b { color: var(--graphite); font-size: 22px; font-weight: 700; }
-  .bar { position: relative; height: 54px; border-radius: 10px; background: var(--alu-deep); overflow: hidden;
-         box-shadow: inset 0 2px 6px rgba(29,33,38,.18); display: flex; }
-  .seg { height: 100%; width: 0; display: flex; align-items: center; padding-left: 12px; white-space: nowrap; overflow: hidden;
-         color: #fff; font-size: 14px; font-weight: 600; border-right: 2px solid var(--alu); }
-  .seg.os { background: #4b525b; } .seg.apps { background: #79818b; }
-  .seg.model { background: var(--wall); } .seg.ctx { background: var(--warn); }
-  .bar.hot { animation: pressure .45s ease-in-out 3; }
-  @keyframes pressure { 50% { box-shadow: inset 0 0 0 4px var(--hot), 0 0 0 6px rgba(216,57,47,.25); } }
-  .story { font-size: 22px; line-height: 1.35; max-width: 40ch; min-height: 3em; }
-  .story .crash { color: var(--hot); font-weight: 700; }
-  .hero-photo { align-self: end; height: min(86vh, 880px); position: relative; display: flex; align-items: flex-end; justify-content: center;
-                background: var(--wall); border-radius: 0 0 0 0; overflow: hidden; }
-  .hero-photo::before { content: ""; position: absolute; inset: 0;
-                        background: radial-gradient(120% 70% at 50% 100%, rgba(255,255,255,.22), transparent 60%); }
-  .hero-photo img { position: relative; height: min(70vh, 720px); width: auto; max-width: none; display: block; }
-  .hero-photo figcaption { position: absolute; left: 20px; top: 20px; color: #fff; font-size: 15px; font-weight: 600; }
+  #boot { position: fixed; inset: 0; z-index: 200; background: var(--bg); display: grid; place-items: center; transition: opacity .8s, visibility .8s; }
+  #boot.done { opacity: 0; visibility: hidden; }
+  #boot div { font: 600 14px "JetBrains Mono", monospace; color: var(--soft); text-align: center; }
+  #boot b { display: block; font: 800 64px "Archivo"; font-variation-settings: "wdth" 70; color: var(--copper-hi); margin-bottom: 10px; font-variant-numeric: tabular-nums; }
 
-  /* ---------- machines ---------- */
-  section { padding: 110px 0; }
-  h2 { font-size: clamp(34px, 4.4vw, 56px); line-height: 1; font-weight: 800; letter-spacing: -.015em;
-       font-variation-settings: "wdth" 112; margin-bottom: 14px; }
-  .lead { color: var(--ink-soft); max-width: 60ch; margin-bottom: 48px; }
-  .machines { display: grid; gap: 22px; }
-  .machine { display: grid; grid-template-columns: 260px 1fr 90px; align-items: center; gap: 24px; }
-  .machine h3 { font-size: 20px; font-weight: 700; font-variation-settings: "wdth" 100; }
-  .machine p { color: var(--ink-soft); font-size: 15px; }
-  .cap { height: 18px; background: var(--alu-deep); border-radius: 9px; overflow: hidden; }
-  .cap i { display: block; height: 100%; background: var(--graphite); border-radius: 9px; }
-  .machine.main .cap i { background: var(--wall); }
-  .gb { font-size: 26px; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; font-variation-settings: "wdth" 70; }
+  #cur, #ring { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 150; border-radius: 50%; }
+  #cur { width: 8px; height: 8px; background: var(--copper-hi); margin: -4px 0 0 -4px; }
+  #ring { width: 40px; height: 40px; border: 1.5px solid rgba(255,210,168,.6); margin: -20px 0 0 -20px; transition: width .25s, height .25s, margin .25s, background .25s; }
+  #ring.big { width: 80px; height: 80px; margin: -40px 0 0 -40px; background: rgba(224,145,90,.08); }
+  @media (hover: none) { #cur, #ring { display: none; } }
 
-  /* ---------- numbers ---------- */
-  .numbers { background: var(--graphite); color: #f2f4f6; }
-  .numbers .lead { color: #aab2bc; }
-  .runs { display: grid; gap: 26px; margin-bottom: 64px; }
-  .run { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: center; }
-  .run h3 { font-size: 18px; font-weight: 700; }
-  .run p { font-size: 14px; color: #aab2bc; }
-  .speed { display: flex; align-items: center; gap: 14px; }
-  .speed i { height: 26px; background: var(--ok); border-radius: 4px; width: calc(var(--tps) * 1.6%); min-width: 6px; }
-  .speed b { font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; font-variation-settings: "wdth" 70; }
-  .speed small { color: #aab2bc; font-size: 14px; }
-  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; border-top: 1px solid #3a4048; padding-top: 40px; }
-  .fact b { display: block; font-size: 44px; line-height: 1; font-weight: 800; font-variation-settings: "wdth" 75; margin-bottom: 10px; }
-  .fact p { color: #aab2bc; max-width: 40ch; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 60; transition: background .3s; padding-top: env(safe-area-inset-top); }
+  nav.solid { background: rgba(22,16,13,.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 16px; }
+  .logo { font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+  .logo i { width: 10px; height: 10px; border-radius: 50%; background: var(--hot); box-shadow: 0 0 12px var(--hot); animation: live 1.6s infinite; }
+  @keyframes live { 50% { opacity: .35; } }
+  .logo small { font: 600 11px "JetBrains Mono", monospace; color: var(--soft); border: 1px solid var(--line); padding: 3px 8px; border-radius: 99px; }
+  .links { display: flex; gap: 28px; font-size: 15px; color: var(--soft); }
+  .links a:hover { color: var(--copper-hi); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, var(--copper-hi), var(--copper) 45%, var(--copper-lo));
+         color: #1b120d; font-weight: 800; padding: 12px 22px; border-radius: 99px; font-size: 15px; white-space: nowrap;
+         box-shadow: 0 10px 30px rgba(224,145,90,.3), inset 0 1px 0 rgba(255,255,255,.5); transition: transform .2s, box-shadow .2s; }
+  .btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 14px 40px rgba(224,145,90,.45), inset 0 1px 0 rgba(255,255,255,.5); }
+  .btn svg { width: 18px; height: 18px; }
+  .ghost { display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border-radius: 99px; border: 1px solid var(--line); font-weight: 700; font-size: 15px;
+           background: rgba(245,235,221,.04); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: border-color .2s, background .2s; white-space: nowrap; }
+  .ghost:hover { border-color: rgba(255,210,168,.4); background: rgba(224,145,90,.08); }
 
-  /* ---------- videos ---------- */
-  .videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-  .video { text-decoration: none; }
-  .video img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 10px; display: block; margin-bottom: 14px;
-               transition: transform .2s ease; }
-  .video:hover img { transform: translateY(-3px); }
-  .video h3 { font-size: 18px; line-height: 1.3; font-weight: 700; margin-bottom: 4px; }
-  .video p { font-size: 14px; color: var(--ink-soft); }
+  #hero { min-height: 100vh; min-height: 100svh; display: flex; align-items: center; padding: 110px 0 80px; }
+  .hero-text { max-width: min(600px, 48vw); }
+  .tag { display: inline-flex; gap: 10px; align-items: center; font: 600 13px "JetBrains Mono", monospace; color: var(--copper-hi);
+         border: 1px solid rgba(255,210,168,.28); background: rgba(224,145,90,.08); padding: 7px 14px; border-radius: 99px; margin-bottom: 28px; }
+  h1 { font-size: clamp(42px, 5.4vw, 92px); line-height: .93; letter-spacing: -.03em; font-weight: 800; font-variation-settings: "wdth" 112; margin-bottom: 28px; }
+  h1 .line { display: block; white-space: nowrap; }
+  h1 .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .06em; }
+  h1 .w > span { display: inline-block; }
+  .glow { background: linear-gradient(95deg, var(--copper-hi), var(--copper) 50%, var(--copper-lo)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { font-size: clamp(17px, 1.5vw, 21px); color: var(--soft); max-width: 36ch; line-height: 1.5; margin-bottom: 36px; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .scroll-hint { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 2; font: 600 12px "JetBrains Mono"; color: var(--dim); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .scroll-hint i { width: 22px; height: 34px; border: 1.5px solid var(--dim); border-radius: 12px; position: relative; }
+  .scroll-hint i::after { content: ""; position: absolute; left: 50%; top: 7px; width: 3px; height: 7px; margin-left: -1.5px; border-radius: 2px; background: var(--copper); animation: wheel 1.6s infinite; }
+  @keyframes wheel { 70% { transform: translateY(10px); opacity: 0; } }
 
-  /* ---------- footer ---------- */
-  footer { padding: 90px 0 70px; border-top: 1px solid var(--alu-deep); }
-  footer h2 { margin-bottom: 26px; }
-  .links { display: flex; flex-wrap: wrap; gap: 14px; }
-  .links a { text-decoration: none; font-weight: 700; padding: 14px 22px; border-radius: 999px; background: var(--graphite); color: #fff; }
-  .links a.yt { background: var(--hot); }
-  .small { margin-top: 40px; font-size: 14px; color: var(--ink-soft); }
+  #crash { position: relative; height: 420vh; }
+  #crash .pin { position: sticky; top: 0; height: 100vh; height: 100svh; display: flex; align-items: center; }
+  .crash-text { max-width: 470px; }
+  .kicker { font: 600 13px "JetBrains Mono", monospace; color: var(--copper); margin-bottom: 18px; letter-spacing: .02em; }
+  h2 { font-size: clamp(36px, 4.8vw, 74px); line-height: .95; letter-spacing: -.025em; font-weight: 800; font-variation-settings: "wdth" 108; margin-bottom: 20px; max-width: 15ch; }
+  #gbbox { margin: 26px 0 6px; font-family: "JetBrains Mono"; color: var(--soft); font-size: 14px; }
+  #gb { font: 800 clamp(72px, 10vw, 150px) "Archivo"; font-variation-settings: "wdth" 70; line-height: .85; font-variant-numeric: tabular-nums; transition: color .2s; }
+  #gb small { font-size: .25em; color: var(--soft); font-weight: 600; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 18px 0 26px; font: 600 12px "JetBrains Mono"; color: var(--soft); }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 7px; background: var(--c); vertical-align: -1px; }
+  .steps { position: relative; min-height: 120px; }
+  .steps p { position: absolute; inset: 0 auto auto 0; font-size: clamp(20px, 2.1vw, 30px); line-height: 1.3; font-weight: 700; opacity: 0; max-width: 24ch; }
+  .steps p.hot { color: var(--hot); }
+  #blackout { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 40; display: grid; place-items: center; }
+  #blackout p { font: 600 15px "JetBrains Mono"; color: #4a3b31; }
 
-  @media (max-width: 860px) {
-    .hero { grid-template-columns: 1fr; min-height: auto; }
-    .hero-text { padding-bottom: 20px; }
-    .hero-photo { min-height: 360px; height: auto; } .hero-photo img { height: 340px; }
-    .machine { grid-template-columns: 1fr 70px; }
-    .machine .cap { grid-column: 1 / -1; grid-row: 2; }
-    .run { grid-template-columns: 1fr; gap: 8px; }
-    .facts, .videos { grid-template-columns: 1fr; }
+  .sec { padding: 130px 0; position: relative; }
+  .solid-bg { background: linear-gradient(180deg, rgba(22,16,13,0), rgba(22,16,13,.93) 12%, rgba(22,16,13,.93) 88%, rgba(22,16,13,0)); }
+  .sec-lede { color: var(--soft); font-size: 19px; max-width: 56ch; line-height: 1.55; }
+
+  .about { display: grid; grid-template-columns: .9fr 1.1fr; gap: 60px; align-items: center; }
+  .portrait { position: relative; height: min(720px, 80vh); }
+  .portrait .disc { position: absolute; left: 4%; right: 4%; bottom: 0; aspect-ratio: 1; border-radius: 50%; max-height: 100%; margin-inline: auto;
+                    background: radial-gradient(circle at 50% 35%, #ffd2a8, #e0915a 38%, #5e1f23 72%, transparent 74%); box-shadow: 0 0 140px rgba(224,145,90,.35); opacity: .9; }
+  .portrait img { position: absolute; left: 50%; bottom: 0; height: 100%; max-width: 110%; object-fit: contain; object-position: bottom; transform: translateX(-50%);
+                  filter: drop-shadow(0 30px 50px rgba(0,0,0,.6)); -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent); mask-image: linear-gradient(to bottom, #000 86%, transparent); }
+  .portrait .float { position: absolute; font: 700 14px "JetBrains Mono"; padding: 10px 14px; border-radius: 12px; background: var(--panel); border: 1px solid rgba(224,145,90,.3); backdrop-filter: blur(10px); white-space: nowrap; }
+  .portrait .float b { color: var(--copper-hi); }
+  .about p.big { font-size: clamp(20px, 2vw, 30px); line-height: 1.4; font-weight: 600; margin-bottom: 26px; }
+  .about p.big span { color: var(--soft); }
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 34px; }
+  .stat { padding: 22px 24px; border-radius: 18px; background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(10px); }
+  .stat strong { display: block; font: 800 52px "Archivo"; font-variation-settings: "wdth" 70; line-height: 1; margin-bottom: 6px; font-variant-numeric: tabular-nums; color: var(--copper-hi); }
+  .stat span { color: var(--soft); font-size: 15px; }
+
+  .machines { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 56px; }
+  .card { position: relative; padding: 26px; border-radius: 22px; background: linear-gradient(180deg, rgba(42,30,23,.92), rgba(24,17,13,.92)); border: 1px solid var(--line);
+          transform-style: preserve-3d; transition: transform .15s ease-out, border-color .3s; min-height: 340px; display: flex; flex-direction: column; }
+  .card:hover { border-color: rgba(224,145,90,.45); }
+  .card.main { border-color: rgba(224,145,90,.6); box-shadow: 0 0 0 1px rgba(224,145,90,.25), 0 30px 80px rgba(224,145,90,.16); }
+  .card .badge { position: absolute; top: 18px; right: 18px; font: 700 11px "JetBrains Mono"; color: #1b120d; background: var(--copper); padding: 4px 9px; border-radius: 99px; }
+  .card svg { width: 56px; height: 56px; color: var(--copper); margin-bottom: 26px; transform: translateZ(50px); }
+  .card h3 { font-size: 22px; font-weight: 800; margin-bottom: 6px; transform: translateZ(35px); }
+  .card p { color: var(--soft); font-size: 15px; transform: translateZ(25px); }
+  .card .ram { margin-top: auto; transform: translateZ(40px); }
+  .card .ram strong { font: 800 64px "Archivo"; font-variation-settings: "wdth" 70; line-height: 1; }
+  .card .ram small { color: var(--soft); font-size: 14px; margin-left: 6px; }
+  .card .cap { height: 8px; border-radius: 4px; background: #2c211a; margin-top: 12px; overflow: hidden; }
+  .card .cap i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--copper-lo), var(--copper-hi)); border-radius: 4px; }
+
+  .bench { margin-top: 56px; display: grid; gap: 22px; }
+  .row h4 { display: flex; align-items: center; gap: 14px; }
+  .logo-i { width: 42px; height: 42px; flex: none; padding: 8px; border-radius: 12px; background: #f5ebdd; box-shadow: 0 6px 18px rgba(0,0,0,.3); }
+  .tool-i { width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px; opacity: .85; }
+  .omlx { display: inline-grid; place-items: center; font: 800 8px "JetBrains Mono"; width: 16px; height: 14px; border-radius: 3px; background: var(--copper); color: #1b120d; margin-right: 4px; vertical-align: -1px; }
+
+  /* will it run on my Mac? */
+  .models { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 56px; }
+  .model { position: relative; padding: 28px; border-radius: 24px; background: linear-gradient(180deg, rgba(42,30,23,.94), rgba(22,15,11,.94)); border: 1px solid var(--line); overflow: hidden; }
+  .model::before { content: ""; position: absolute; right: -70px; top: -70px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(224,145,90,.22), transparent 70%); }
+  .model .head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+  .logo-i.navy { width: 46px; height: 46px; padding: 3px; }
+  .logo-i.navy, .model .head img.navy { background: #101a33; box-shadow: 0 0 0 1px rgba(120,160,255,.35), 0 10px 26px rgba(0,0,0,.35); }
+  .model .head img { width: 64px; height: 64px; padding: 12px; border-radius: 18px; background: #f5ebdd; box-shadow: 0 10px 26px rgba(0,0,0,.35); }
+  .model h3 { font-size: 24px; font-weight: 800; line-height: 1.1; } .model .by { color: var(--soft); font-size: 14px; margin-top: 4px; }
+  .model .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .model .facts div { padding: 12px 14px; border-radius: 14px; background: rgba(245,235,221,.04); border: 1px solid var(--line); }
+  .model .facts b { display: block; font: 800 30px "Archivo"; font-variation-settings: "wdth" 70; color: var(--copper-hi); line-height: 1.05; }
+  .model .facts span { font-size: 12px; color: var(--soft); }
+  .fits { display: grid; gap: 8px; }
+  .fit { display: flex; align-items: center; gap: 10px; font-size: 14px; padding: 9px 12px; border-radius: 12px; background: rgba(245,235,221,.035); }
+  .fit img { width: 16px; height: 16px; } .fit span { flex: 1; } .fit em { font-style: normal; font: 700 12px "JetBrains Mono"; padding: 3px 8px; border-radius: 99px; }
+  .yes { background: rgba(118,190,120,.16); color: #a9e0a4; } .no { background: rgba(255,90,61,.14); color: #ff9a85; } .warn { background: rgba(255,210,168,.14); color: var(--copper-hi); }
+  .model .note { margin-top: 14px; font-size: 13px; color: var(--dim); line-height: 1.45; }
+  .tools { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; align-items: center; }
+  .tools > span { font: 600 13px "JetBrains Mono"; color: var(--soft); margin-right: 6px; }
+  .tool { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); font-weight: 700; font-size: 15px; }
+  .tool img { width: 22px; height: 22px; } .tool .omlx { width: 22px; height: 22px; font-size: 9px; border-radius: 6px; margin: 0; }
+  .card .brand { position: absolute; top: 20px; left: 92px; width: 26px; height: 26px; transform: translateZ(50px); opacity: .9; }
+  @media (max-width: 1100px) { .models { grid-template-columns: 1fr 1fr; } }
+  @media (max-aspect-ratio: 6/5), (max-width: 860px) { .models { grid-template-columns: 1fr; } }
+  .row { display: grid; grid-template-columns: 300px 1fr; gap: 26px; align-items: center; }
+  .row h4 { font-size: 19px; font-weight: 700; } .row h4 small { display: block; color: var(--soft); font-size: 14px; font-weight: 500; margin-top: 3px; }
+  .track { position: relative; height: 56px; border-radius: 12px; background: rgba(40,29,22,.9); overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); }
+  .track i { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 12px; background: linear-gradient(90deg, var(--oxblood), var(--copper) 60%, var(--copper-hi)); box-shadow: 0 0 30px rgba(224,145,90,.35); }
+  .track i::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent); transform: translateX(-100%); animation: shine 2.4s infinite; }
+  @keyframes shine { to { transform: translateX(100%); } }
+  .track b { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font: 800 28px "Archivo"; font-variation-settings: "wdth" 70; font-variant-numeric: tabular-nums; }
+  .track b small { font: 600 12px "JetBrains Mono"; color: var(--soft); margin-left: 4px; }
+  .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 70px; }
+  .duel > div { padding: 32px; border-radius: 22px; background: var(--panel); border: 1px solid var(--line); }
+  .duel .vs { display: flex; align-items: baseline; gap: 14px; margin: 14px 0 12px; flex-wrap: wrap; }
+  .duel .vs strong { font: 800 clamp(44px, 6vw, 84px) "Archivo"; font-variation-settings: "wdth" 70; line-height: 1; }
+  .duel .vs .a { color: var(--dim); } .duel .vs .b { color: var(--copper-hi); }
+  .duel .vs em { font-style: normal; color: var(--dim); font: 600 14px "JetBrains Mono"; }
+  .duel p { color: var(--soft); line-height: 1.5; } .duel h4 { font: 600 13px "JetBrains Mono"; color: var(--copper); }
+
+  #tests { position: relative; height: 360vh; }
+  #tests .pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: flex; flex-direction: column; justify-content: center; background: rgba(22,16,13,.92); }
+  .rail { display: flex; gap: 24px; padding-left: max(24px, calc((100vw - 1240px) / 2)); margin-top: 46px; will-change: transform; }
+  .test { flex: none; width: 380px; height: 400px; border-radius: 26px; padding: 30px; background: linear-gradient(180deg, #2a1e17, #170f0b); border: 1px solid var(--line);
+          display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .test .no { font: 800 104px "Archivo"; font-variation-settings: "wdth" 70; color: transparent; -webkit-text-stroke: 1.5px rgba(224,145,90,.7); line-height: 1; }
+  .test h3 { font-size: 27px; line-height: 1.15; margin: 18px 0 10px; font-weight: 800; }
+  .test p { color: var(--soft); font-size: 15px; line-height: 1.5; }
+  .test .when { margin-top: auto; font: 600 12px "JetBrains Mono"; color: var(--copper-hi); }
+  .test::after { content: ""; position: absolute; right: -60px; top: -60px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(224,145,90,.25), transparent 70%); }
+
+  .vids { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 56px; }
+  .vid { border-radius: 20px; overflow: hidden; background: var(--panel); border: 1px solid var(--line); transition: transform .3s, border-color .3s; }
+  .vid:hover { transform: translateY(-8px) rotate(-.6deg); border-color: rgba(224,145,90,.5); }
+  .vid .th { position: relative; aspect-ratio: 16/9; overflow: hidden; }
+  .vid .th img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; display: block; }
+  .vid:hover .th img { transform: scale(1.08); }
+  .vid .play { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; transition: opacity .3s; background: rgba(22,16,13,.35); }
+  .vid:hover .play { opacity: 1; }
+  .vid .play i { width: 64px; height: 64px; border-radius: 50%; background: var(--copper); display: grid; place-items: center; }
+  .vid .play i::after { content: ""; border-left: 18px solid #1b120d; border-top: 11px solid transparent; border-bottom: 11px solid transparent; margin-left: 5px; }
+  .vid div.t { padding: 18px 20px 22px; } .vid h3 { font-size: 18px; line-height: 1.3; margin-bottom: 6px; } .vid p { color: var(--soft); font-size: 14px; }
+
+
+  /* work with me */
+  .work { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+  .offer { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .offer a { display: block; padding: 22px; border-radius: 20px; background: var(--panel); border: 1px solid var(--line); transition: transform .25s, border-color .25s; }
+  .offer a:hover { transform: translateY(-4px); border-color: rgba(224,145,90,.5); }
+  .offer b { display: block; font-size: 19px; margin-bottom: 4px; } .offer span { color: var(--soft); font-size: 14px; line-height: 1.45; }
+  .offer i { font-style: normal; display: block; font: 700 12px "JetBrains Mono"; color: var(--copper); margin-bottom: 10px; }
+  @media (max-aspect-ratio: 6/5), (max-width: 860px) { .work { grid-template-columns: 1fr; gap: 30px; } }
+  @media (max-width: 460px) { .offer { grid-template-columns: 1fr; } }
+  footer { position: relative; padding: 150px 0 60px; text-align: center; overflow: hidden; }
+  footer::before { content: ""; position: absolute; left: 50%; top: 42%; width: min(900px, 140vw); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%;
+                   background: radial-gradient(circle, rgba(224,145,90,.22), rgba(94,31,35,.18) 40%, transparent 65%); pointer-events: none; }
+  footer h2 { margin: 0 auto 26px; max-width: none; font-size: clamp(44px, 8vw, 128px); }
+  footer .btn { font-size: 21px; padding: 20px 40px; animation: pulse 2.2s infinite; }
+  footer .btn svg { width: 26px; height: 26px; }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(224,145,90,.5), 0 10px 40px rgba(224,145,90,.35); } 60% { box-shadow: 0 0 0 24px rgba(224,145,90,0), 0 10px 40px rgba(224,145,90,.35); } }
+  .socials { display: flex; justify-content: center; gap: 12px; margin-top: 34px; flex-wrap: wrap; }
+  .fine { margin-top: 70px; color: var(--dim); font-size: 14px; }
+
+  /* tablet */
+  @media (max-width: 1100px) {
+    .links { gap: 18px; font-size: 14px; }
+    .machines { grid-template-columns: 1fr 1fr; }
+    .row { grid-template-columns: 220px 1fr; }
   }
-  @media (prefers-reduced-motion: reduce) { .bar.hot { animation: none; } .video img { transition: none; } }
+  /* portrait tablet + phone: 3D above (hero) or below (crash) the text */
+  @media (max-aspect-ratio: 6/5), (max-width: 860px) {
+    .links { display: none; }
+    #hero { align-items: flex-start; padding-top: 54vh; padding-top: 54svh; padding-bottom: 60px; }
+    .hero-text { max-width: 100%; }
+    h1 { font-size: clamp(38px, 9vw, 72px); }
+    h1 .line { white-space: normal; }
+    .scroll-hint { display: none; }
+    #crash .pin { align-items: flex-start; padding-top: 92px; }
+    .crash-text { max-width: 100%; }
+    #crash h2 { font-size: clamp(30px, 7vw, 54px); margin-bottom: 8px; }
+    #gbbox { margin-top: 12px; } #gb { font-size: clamp(64px, 15vw, 110px); }
+    .legend { margin: 10px 0 14px; }
+    .steps { min-height: 90px; } .steps p { font-size: clamp(18px, 4.6vw, 26px); }
+    .about { grid-template-columns: 1fr; gap: 30px; } .portrait { height: min(560px, 70vh); }
+    .duel, .vids { grid-template-columns: 1fr; }
+    .row { grid-template-columns: 1fr; gap: 10px; }
+    .test { width: min(320px, 78vw); height: 360px; }
+    .sec { padding: 90px 0; }
+  }
+  @media (max-width: 560px) {
+    .wrap { width: calc(100% - 32px); }
+    .machines, .stats { grid-template-columns: 1fr; }
+    nav .btn span, .logo small { display: none; } nav .btn { padding: 10px 14px; }
+    .ctas .btn, .ctas .ghost { flex: 1 1 100%; }
+    .card { min-height: 0; } .portrait .float { font-size: 12px; }
+    .test .no { font-size: 80px; } .test h3 { font-size: 23px; }
+    .duel > div { padding: 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .logo i, footer .btn, .track i::after, .scroll-hint i::after { animation: none; } }
 </style>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
 </head>
 <body>
+<div id="boot"><div><b id="bootn">0</b>loading the lab…</div></div>
+<div id="cur"></div><div id="ring"></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div id="blackout"><p>· · · restarting · · ·</p></div>
+
+<nav id="nav"><div class="wrap">
+  <a class="logo" href="#hero"><i></i>IamVikramjit <small>LOCAL AI LAB</small></a>
+  <div class="links"><a href="#crash">The crash</a><a href="#about">About</a><a href="#machines">Machines</a><a href="#models">Will it run?</a><a href="#numbers">Numbers</a><a href="#tests">Next tests</a><a href="work-with-me/">Work with me</a></div>
+  <a class="btn" href="https://www.youtube.com/@IamVikramjit?sub_confirmation=1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.7 15.1V8.9l5.8 3.1-5.8 3.1z"/></svg><span>Subscribe</span></a>
+</div></nav>
+
 <main>
-  <header class="wrap hero">
-    <div class="hero-text">
-      <p class="name">Vikramjit <span>· IamVikramjit</span></p>
-      <h1 id="headline"><span>I test local</span><span>AI on the</span><span>laptop on</span><span>your desk.</span></h1>
-      <div class="meter" aria-hidden="true">
-        <div class="meter-top"><span>Memory used on my MacBook Pro M5</span><span><b id="used">0</b> of 32 GB</span></div>
-        <div class="bar" id="bar">
-          <div class="seg os" data-gb="6">macOS</div>
-          <div class="seg apps" data-gb="3">Apps</div>
-          <div class="seg model" data-gb="16">Qwen 3.8 27B</div>
-          <div class="seg ctx" data-gb="6">Context</div>
-        </div>
-      </div>
-      <p class="story" id="story">Real models, real numbers, real crashes. No sponsors.</p>
+<header id="hero"><div class="wrap">
+  <div class="hero-text">
+    <p class="tag reveal-in">● LIVE · MacBook Pro M5 · 32 GB</p>
+    <h1 id="h1"><span class="line"><span class="w"><span>I</span></span> <span class="w"><span>test</span></span> <span class="w"><span class="glow">local</span></span> <span class="w"><span class="glow">AI</span></span></span>
+      <span class="line"><span class="w"><span>on</span></span> <span class="w"><span>the</span></span> <span class="w"><span>laptop</span></span></span>
+      <span class="line"><span class="w"><span>on</span></span> <span class="w"><span>your</span></span> <span class="w"><span>desk.</span></span></span></h1>
+    <p class="lede reveal-in">Real models. Real tokens per second. Real crashes. No sponsors, just honest numbers before you spend money.</p>
+    <div class="ctas reveal-in">
+      <a class="btn" href="https://www.youtube.com/@IamVikramjit?sub_confirmation=1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.7 15.1V8.9l5.8 3.1-5.8 3.1z"/></svg>Watch the tests</a>
+      <a class="ghost" href="#crash">Scroll: watch it crash ↓</a>
     </div>
-    <figure class="hero-photo">
-      <figcaption>My desk, where every test is filmed</figcaption>
-      <img src="me.png" alt="Vikramjit at the desk, thinking, wearing earphones" width="880" height="720">
-    </figure>
-  </header>
+  </div>
+</div><div class="scroll-hint"><i></i>scroll</div></header>
 
-  <section class="wrap" aria-labelledby="machines-title">
-    <h2 id="machines-title">The machines I test on</h2>
-    <p class="lead">No cloud. Every result on this page comes from one of these four machines. The bar is how much memory each one has for AI.</p>
-    <div class="machines">
-      <div class="machine main"><div><h3>MacBook Pro M5</h3><p>My main test laptop</p></div><div class="cap"><i style="width:100%"></i></div><div class="gb">32 GB</div></div>
-      <div class="machine"><div><h3>RTX 4080 desktop</h3><p>NVIDIA, for the Mac vs PC tests</p></div><div class="cap"><i style="width:50%"></i></div><div class="gb">16 GB</div></div>
-      <div class="machine"><div><h3>MacBook Pro M1</h3><p>The old one, still running</p></div><div class="cap"><i style="width:25%"></i></div><div class="gb">8 GB</div></div>
-      <div class="machine"><div><h3>RTX 4050 laptop</h3><p>The gaming laptop limit</p></div><div class="cap"><i style="width:18.75%"></i></div><div class="gb">6 GB</div></div>
-    </div>
-  </section>
+<section id="crash"><div class="pin"><div class="wrap"><div class="crash-text">
+  <p class="kicker">// THE NIGHT IT CRASHED</p>
+  <h2>32 GB sounds like a lot. It isn't.</h2>
+  <div id="gbbox">memory used · MacBook Pro M5</div>
+  <div id="gb">0<small> / 32 GB</small></div>
+  <div class="legend"><span style="--c:#7a5e4b">macOS</span><span style="--c:#a8896f">Apps</span><span style="--c:#e0915a">Qwen 3.8 27B</span><span style="--c:#ffd2a8">Context</span></div>
+  <div class="steps">
+    <p>macOS and my apps take 9 GB before I even start.</p>
+    <p>Then I load Qwen 3.8 27B. Another 16 GB.</p>
+    <p>The long chat grows the context. 31 of 32 GB…</p>
+    <p class="hot">…and my MacBook shut down.</p>
+    <p>So now I test what fits, before you buy anything.</p>
+  </div>
+</div></div></div></section>
 
-  <section class="numbers" aria-labelledby="numbers-title">
-    <div class="wrap">
-      <h2 id="numbers-title">Numbers from my own tests</h2>
-      <p class="lead">Tokens per second: how fast the AI writes. Around 15 is easy to read along with; 40 feels instant.</p>
-      <div class="runs">
-        <div class="run"><div><h3>Gemma 4 E2B</h3><p>MacBook Pro M1 8GB · LM Studio</p></div><div class="speed" style="--tps:26"><i></i><b>26</b><small>tok/s</small></div></div>
-        <div class="run"><div><h3>Gemma 4 E2B</h3><p>MacBook Pro M5 32GB · LM Studio</p></div><div class="speed" style="--tps:54"><i></i><b>54</b><small>tok/s</small></div></div>
-        <div class="run"><div><h3>Qwen 3.6 35B-A3B</h3><p>M5 32GB · mixture of experts</p></div><div class="speed" style="--tps:40"><i></i><b>40</b><small>tok/s</small></div></div>
-        <div class="run"><div><h3>Qwen 3.8 27B</h3><p>M5 32GB · dense, best run</p></div><div class="speed" style="--tps:17.5"><i></i><b>17.5</b><small>tok/s</small></div></div>
-      </div>
-      <div class="facts">
-        <div class="fact"><b>20 s vs 7 s</b><p>Reloading the AI's memory after a restart: LM Studio against oMLX, same model and prompt.</p></div>
-        <div class="fact"><b>5 min vs 12 min</b><p>Longest single answer: LM Studio stopped at five minutes, oMLX kept going for almost twelve.</p></div>
-      </div>
+<section class="sec solid-bg" id="about"><div class="wrap about">
+  <div class="portrait" id="portrait">
+    <div class="disc"></div>
+    <img src="portrait_arms.webp" width="1122" height="1402" loading="lazy" alt="Vikramjit in a navy suit, arms crossed, smiling">
+    <div class="float" style="left:0;top:22%">tok/s <b>54.0</b></div>
+    <div class="float" style="right:0;top:42%">RAM <b>31/32 GB</b></div>
+    <div class="float" style="left:4%;bottom:14%">tests <b>10 queued</b></div>
+  </div>
+  <div>
+    <p class="kicker reveal">// WHO'S TESTING</p>
+    <h2 class="reveal">Hi, I'm Vikramjit.</h2>
+    <p class="big reveal">I'm a developer. I buy the laptops, run the models, and show you the real numbers. <span>Including the nights when it all goes wrong.</span></p>
+    <div class="ctas reveal"><a class="ghost" href="https://www.youtube.com/@IamVikramjit">YouTube · IamVikramjit</a><a class="ghost" href="https://www.instagram.com/iam.vikramjit/">Instagram</a><a class="ghost" href="https://x.com/VikramjitSarkar">X</a></div>
+    <div class="stats">
+      <div class="stat reveal"><strong data-count="1000" data-suffix="+">0</strong><span>subscribers</span></div>
+      <div class="stat reveal"><strong data-count="4">0</strong><span>real machines, no cloud</span></div>
+      <div class="stat reveal"><strong data-count="54">0</strong><span>tok/s, fastest run</span></div>
+      <div class="stat reveal"><strong data-count="82" data-suffix=" min">0</strong><span>longest a model "thought"</span></div>
     </div>
-  </section>
+  </div>
+</div></section>
 
-  <section class="wrap" aria-labelledby="videos-title">
-    <h2 id="videos-title">Start with these</h2>
-    <p class="lead">Three good places to start.</p>
-    <div class="videos">
-      <a class="video" href="https://youtu.be/HW0RPmkJMgE"><img src="https://i.ytimg.com/vi/HW0RPmkJMgE/hqdefault.jpg" alt=""><h3>Local LLM vibe coding on a MacBook Pro M5: the honest truth</h3><p>The test that started the channel</p></a>
-      <a class="video" href="https://youtu.be/AznjSh5IHFs"><img src="https://i.ytimg.com/vi/AznjSh5IHFs/hqdefault.jpg" alt=""><h3>How to run local AI coding on Mac for free</h3><p>4-minute setup guide</p></a>
-      <a class="video" href="https://youtu.be/Prww8NdNQIo"><img src="https://i.ytimg.com/vi/Prww8NdNQIo/hqdefault.jpg" alt=""><h3>Qwen 3.8 27B: stuck 82 minutes, then built Minecraft</h3><p>82 minutes stuck, then a working game</p></a>
-    </div>
-  </section>
+<section class="sec solid-bg" id="machines"><div class="wrap">
+  <p class="kicker reveal">// THE LAB</p>
+  <h2 class="reveal">Four machines. Zero cloud.</h2>
+  <p class="sec-lede reveal">Every number on this page comes from one of these. The bar is how much memory each one has for AI.</p>
+  <div class="machines">
+    <div class="card main tilt"><span class="badge">MAIN</span>
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="8" y="9" width="32" height="22" rx="2.5"/><path d="M3 37h42l-3 4H6z"/></svg>
+      <img class="brand" src="icons/apple-light.svg" alt="Apple"><h3>MacBook Pro M5</h3><p>Where most tests run</p><div class="ram"><strong data-count="32">0</strong><small>GB unified</small><div class="cap"><i data-fill="100"></i></div></div></div>
+    <div class="card tilt">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="8" width="26" height="20" rx="2"/><path d="M14 34h10M19 28v6"/><rect x="36" y="8" width="7" height="28" rx="1.5"/></svg>
+      <img class="brand" src="icons/nvidia-color.svg" alt="NVIDIA"><h3>RTX 4080 desktop</h3><p>The Mac vs PC fights</p><div class="ram"><strong data-count="16">0</strong><small>GB VRAM</small><div class="cap"><i data-fill="50"></i></div></div></div>
+    <div class="card tilt">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="8" y="9" width="32" height="22" rx="2.5"/><path d="M3 37h42l-3 4H6z"/></svg>
+      <img class="brand" src="icons/apple-light.svg" alt="Apple"><h3>MacBook Pro M1</h3><p>The old one, still going</p><div class="ram"><strong data-count="8">0</strong><small>GB unified</small><div class="cap"><i data-fill="25"></i></div></div></div>
+    <div class="card tilt">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="10" width="36" height="22" rx="2.5"/><path d="M2 36h44l-3 4H5z"/><path d="M18 21h12"/></svg>
+      <img class="brand" src="icons/nvidia-color.svg" alt="NVIDIA"><h3>RTX 4050 laptop</h3><p>The gaming laptop limit</p><div class="ram"><strong data-count="6">0</strong><small>GB VRAM</small><div class="cap"><i data-fill="19"></i></div></div></div>
+  </div>
+</div></section>
 
-  <footer class="wrap">
-    <h2>Watch the next test</h2>
-    <div class="links">
-      <a class="yt" href="https://www.youtube.com/@IamVikramjit">YouTube: IamVikramjit</a>
-      <a href="https://www.instagram.com/iam.vikramjit/">Instagram: @iam.vikramjit</a>
-      <a href="https://x.com/VikramjitSarkar">X: @VikramjitSarkar</a>
+
+<section class="sec solid-bg" id="models"><div class="wrap">
+  <p class="kicker reveal">// WILL IT RUN ON MY MAC?</p>
+  <h2 class="reveal">The models I've actually tested.</h2>
+  <p class="sec-lede reveal">Green means I ran it myself. Memory is the model at 4-bit before your chat grows; long chats need more.</p>
+  <div class="models">
+    <div class="model reveal">
+      <div class="head"><img class="navy" src="icons/gemma-bright.svg" alt="Gemma"><div><h3>Gemma 4 E2B</h3><p class="by">Google · small and fast</p></div></div>
+      <div class="facts"><div><b>≈3 GB</b><span>memory needed</span></div><div><b>54</b><span>tok/s on M5</span></div></div>
+      <div class="fits"><div class="fit"><img src="icons/apple-light.svg" alt=""><span>MacBook Pro M1 · 8 GB</span><em class="yes">26 tok/s ✓</em></div>
+        <div class="fit"><img src="icons/apple-light.svg" alt=""><span>Any 16 GB Mac</span><em class="yes">easy</em></div>
+        <div class="fit"><img src="icons/apple-light.svg" alt=""><span>MacBook Pro M5 · 32 GB</span><em class="yes">54 tok/s ✓</em></div></div>
+      <p class="note">The one I'd start with on an older or 8 GB Mac.</p>
     </div>
-    <p class="small">Every number here is from my own runs. If yours differ, tell me your Mac and RAM in the comments.</p>
-  </footer>
+    <div class="model reveal">
+      <div class="head"><img src="icons/qwen-color.svg" alt="Qwen"><div><h3>Qwen 3.6 35B-A3B</h3><p class="by">Alibaba · mixture of experts</p></div></div>
+      <div class="facts"><div><b>≈20 GB</b><span>memory needed</span></div><div><b>40</b><span>tok/s on M5</span></div></div>
+      <div class="fits"><div class="fit"><img src="icons/apple-light.svg" alt=""><span>MacBook Pro M1 · 8 GB</span><em class="no">won't fit</em></div>
+        <div class="fit"><img src="icons/apple-light.svg" alt=""><span>Any 16 GB Mac</span><em class="no">won't fit</em></div>
+        <div class="fit"><img src="icons/apple-light.svg" alt=""><span>MacBook Pro M5 · 32 GB</span><em class="yes">40 tok/s ✓</em></div></div>
+      <p class="note">Bigger, but only a small part works per word, so it feels fast. My favourite on 32 GB.</p>
+    </div>
+    <div class="model reveal">
+      <div class="head"><img src="icons/qwen-color.svg" alt="Qwen"><div><h3>Qwen 3.8 27B</h3><p class="by">Alibaba · dense</p></div></div>
+      <div class="facts"><div><b>≈16 GB</b><span>memory needed</span></div><div><b>17.5</b><span>tok/s, best run</span></div></div>
+      <div class="fits"><div class="fit"><img src="icons/apple-light.svg" alt=""><span>MacBook Pro M1 · 8 GB</span><em class="no">won't fit</em></div>
+        <div class="fit"><img src="icons/apple-light.svg" alt=""><span>Any 16 GB Mac</span><em class="no">too tight</em></div>
+        <div class="fit"><img src="icons/apple-light.svg" alt=""><span>MacBook Pro M5 · 32 GB</span><em class="warn">runs · crashed at 31 GB</em></div></div>
+      <p class="note">Smart, but slow (8–10 tok/s most of the time), and long chats filled all 32 GB.</p>
+    </div>
+  </div>
+  <div class="tools reveal"><span>TESTED WITH</span>
+    <span class="tool"><img src="icons/lmstudio-light.svg" alt="">LM Studio</span>
+    <span class="tool"><i class="omlx">oM</i>oMLX</span>
+    <span class="tool"><img src="icons/claudecode-color.svg" alt="">Claude Code</span>
+    <span class="tool"><img src="icons/opencode-light.svg" alt="">OpenCode</span>
+  </div>
+</div></section>
+<section class="sec solid-bg" id="numbers"><div class="wrap">
+  <p class="kicker reveal">// MY OWN BENCHMARKS</p>
+  <h2 class="reveal">How fast does the AI actually write?</h2>
+  <p class="sec-lede reveal">Tokens per second. Around 15 is comfortable to read along with. 40 feels instant.</p>
+  <div class="bench">
+    <div class="row"><h4><img class="logo-i navy" src="icons/gemma-bright.svg" alt="Gemma"><span>Gemma 4 E2B<small>MacBook Pro M1 8GB · <img class="tool-i" src="icons/lmstudio-light.svg" alt="">LM Studio</small></span></h4><div class="track"><i data-w="26"></i><b><span data-count="26">0</span><small>tok/s</small></b></div></div>
+    <div class="row"><h4><img class="logo-i navy" src="icons/gemma-bright.svg" alt="Gemma"><span>Gemma 4 E2B<small>MacBook Pro M5 32GB · <img class="tool-i" src="icons/lmstudio-light.svg" alt="">LM Studio</small></span></h4><div class="track"><i data-w="54"></i><b><span data-count="54">0</span><small>tok/s</small></b></div></div>
+    <div class="row"><h4><img class="logo-i" src="icons/qwen-color.svg" alt="Qwen"><span>Qwen 3.6 35B-A3B<small>M5 32GB · mixture of experts</small></span></h4><div class="track"><i data-w="40"></i><b><span data-count="40">0</span><small>tok/s</small></b></div></div>
+    <div class="row"><h4><img class="logo-i" src="icons/qwen-color.svg" alt="Qwen"><span>Qwen 3.8 27B<small>M5 32GB · dense, best run</small></span></h4><div class="track"><i data-w="17.5"></i><b><span data-count="17.5" data-dec="1">0</span><small>tok/s</small></b></div></div>
+  </div>
+  <div class="duel">
+    <div class="reveal"><h4>RESTART AFTER A CRASH</h4><div class="vs"><strong class="a">20 s</strong><em><img class="tool-i" src="icons/lmstudio-light.svg" alt="">LM Studio</em><strong class="b">7 s</strong><em><i class="omlx">oM</i>oMLX</em></div><p>Reloading the AI's memory after a restart. Same model, same prompt.</p></div>
+    <div class="reveal"><h4>LONGEST SINGLE ANSWER</h4><div class="vs"><strong class="a">5 min</strong><em><img class="tool-i" src="icons/lmstudio-light.svg" alt="">LM Studio</em><strong class="b">12 min</strong><em><i class="omlx">oM</i>oMLX</em></div><p>LM Studio stopped at five minutes. oMLX kept going for almost twelve.</p></div>
+  </div>
+</div></section>
+
+<section id="tests"><div class="pin">
+  <div class="wrap"><p class="kicker">// LOCAL AI LAB · STARTS 26 OCT</p><h2 style="margin-bottom:0">Ten tests. Starting 26 October.</h2></div>
+  <div class="rail" id="rail">
+    <div class="test"><span class="no">01</span><h3>Old Mac vs new Mac</h3><p>M1 8GB against M5 32GB. Same model, same prompt.</p><span class="when">TEST #1</span></div>
+    <div class="test"><span class="no">02</span><h3>The 82-minute loop</h3><p>Why a 27B model thought for 82 minutes and wrote zero code.</p><span class="when">TEST #2</span></div>
+    <div class="test"><span class="no">03</span><h3>Bigger but faster?</h3><p>How a 35B mixture-of-experts model beats a 27B dense one.</p><span class="when">TEST #3</span></div>
+    <div class="test"><span class="no">04</span><h3>5 min vs 12 min</h3><p>LM Studio against oMLX on one very long answer.</p><span class="when">TEST #4</span></div>
+    <div class="test"><span class="no">05</span><h3>A free coding agent</h3><p>Local model plus a free agent. Can it build a real app?</p><span class="when">TEST #5</span></div>
+    <div class="test"><span class="no">06</span><h3>Don't buy a Mac for Claude</h3><p>When a cheap laptop and a subscription make more sense.</p><span class="when">TEST #6</span></div>
+    <div class="test"><span class="no">07</span><h3>The crash</h3><p>31 of 32 GB, and the MacBook switched itself off.</p><span class="when">TEST #7</span></div>
+    <div class="test"><span class="no">08</span><h3>The restart test</h3><p>Which app gets you back to work fastest after a crash.</p><span class="when">TEST #8</span></div>
+    <div class="test"><span class="no">09</span><h3>70B on 32 GB?</h3><p>Can a 70-billion model run at all on my laptop?</p><span class="when">TEST #9</span></div>
+    <div class="test"><span class="no">10</span><h3>Mac vs NVIDIA</h3><p>MacBook Pro M5 against the RTX 4080 desktop.</p><span class="when">TEST #10</span></div>
+  </div>
+</div></section>
+
+<section class="sec solid-bg" id="videos"><div class="wrap">
+  <p class="kicker reveal">// START HERE</p>
+  <h2 class="reveal">The videos people watch most.</h2>
+  <div class="vids">
+    <a class="vid reveal" href="https://youtu.be/HW0RPmkJMgE"><div class="th"><img src="https://i.ytimg.com/vi/HW0RPmkJMgE/hqdefault.jpg" alt="" loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>Local LLM vibe coding on a MacBook Pro M5: the honest truth</h3><p>The test that started the channel</p></div></a>
+    <a class="vid reveal" href="https://youtu.be/AznjSh5IHFs"><div class="th"><img src="https://i.ytimg.com/vi/AznjSh5IHFs/hqdefault.jpg" alt="" loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>How to run local AI coding on Mac for free</h3><p>4-minute setup guide</p></div></a>
+    <a class="vid reveal" href="https://youtu.be/Prww8NdNQIo"><div class="th"><img src="https://i.ytimg.com/vi/Prww8NdNQIo/hqdefault.jpg" alt="" loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>Qwen 3.8 27B: stuck 82 minutes, then built Minecraft</h3><p>82 minutes stuck, then a working game</p></div></a>
+  </div>
+</div></section>
+
+
+<section class="sec solid-bg" id="work"><div class="wrap work">
+  <div>
+    <p class="kicker reveal">// WORK WITH ME</p>
+    <h2 class="reveal">Want your AI tool or laptop tested?</h2>
+    <p class="sec-lede reveal">I test products hands-on, on real hardware, and show my audience exactly how they perform. Honest verdicts, clear disclosure, numbers people can repeat.</p>
+    <div class="ctas reveal" style="margin-top:28px"><a class="btn" href="work-with-me/">See formats &amp; proposal</a><a class="ghost" href="mailto:thevikeffect@gmail.com?subject=Sponsorship%20brief">✉ thevikeffect@gmail.com</a></div>
+  </div>
+  <div class="offer">
+    <a class="reveal" href="work-with-me/#formats"><i>8–12 MIN</i><b>Dedicated lab test</b><span>A full video: setup, benchmarks, honest verdict.</span></a>
+    <a class="reveal" href="work-with-me/#formats"><i>60–90 S</i><b>Integrated segment</b><span>Your product live inside a Local AI Lab test.</span></a>
+    <a class="reveal" href="work-with-me/#formats"><i>3 × VERTICAL</i><b>Shorts &amp; Reels</b><span>Hook-first clips for YouTube, Instagram, Facebook.</span></a>
+    <a class="reveal" href="work-with-me/#formats"><i>DATA</i><b>Benchmark report</b><span>Reproducible numbers and charts you can reuse.</span></a>
+  </div>
+</div></section>
+<footer id="end" class="solid-bg"><div class="wrap">
+  <p class="kicker">// DON'T MISS THE NEXT TEST</p>
+  <h2>Watch the next test.</h2>
+  <a class="btn" href="https://www.youtube.com/@IamVikramjit?sub_confirmation=1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.7 15.1V8.9l5.8 3.1-5.8 3.1z"/></svg>Subscribe on YouTube</a>
+  <div class="socials"><a class="ghost" href="https://www.instagram.com/iam.vikramjit/">Instagram · @iam.vikramjit</a><a class="ghost" href="https://x.com/VikramjitSarkar">X · @VikramjitSarkar</a></div>
+  <p class="fine">Every number here is from my own runs. If yours differ, tell me your Mac and RAM in the comments.</p>
+</div></footer>
 </main>
 
-<script>
-  // One orchestrated moment: the 32 GB bar fills like my real crash, then settles.
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const segs = [...document.querySelectorAll('.seg')];
-  const used = document.getElementById('used');
-  const story = document.getElementById('story');
-  const head = document.getElementById('headline');
-  const bar = document.getElementById('bar');
-  const total = segs.reduce((s, el) => s + +el.dataset.gb, 0); // 31
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-  function finalState() {
-    segs.forEach(el => el.style.width = `calc(var(--gb) * ${el.dataset.gb})`);
-    used.textContent = total;
-    head.style.setProperty('--w', 125);
-  }
+const gsap = window.gsap, ScrollTrigger = window.ScrollTrigger;
+gsap.registerPlugin(ScrollTrigger);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine = matchMedia('(hover: hover)').matches;
+const C = { bg: '#16100d', copper: '#e0915a', hi: '#ffd2a8', lo: '#b8562f', mocha: '#7a5e4b', ox: '#5e1f23', hot: '#ff4a2e', cream: '#f5ebdd' };
 
-  if (reduce) { finalState(); }
-  else {
-    let gb = 0, t = 400;
-    segs.forEach(el => {
-      const n = +el.dataset.gb, dur = n * 140;
-      setTimeout(() => {
-        el.style.transition = `width ${dur}ms cubic-bezier(.3,.7,.3,1)`;
-        el.style.width = `calc(var(--gb) * ${n})`;
-        const from = gb, start = performance.now();
-        (function tick(now) {
-          const p = Math.min(1, (now - start) / dur);
-          const v = from + n * p;
-          used.textContent = Math.round(v);
-          head.style.setProperty('--w', 75 + (v / 32) * 50);   // the headline stretches as memory fills
-          if (p < 1) requestAnimationFrame(tick);
-        })(start);
-        gb += n;
-      }, t);
-      t += dur + 120;
-    });
-    setTimeout(() => {
-      bar.classList.add('hot');
-      story.innerHTML = '<span class="crash">31 of 32 GB. Then my MacBook shut down.</span>';
-    }, t + 100);
-    setTimeout(() => { story.textContent = 'So now I test every model first, and show you exactly what fits.'; }, t + 2600);
-  }
+// ---------------- page plumbing ----------------
+if (!reduce && window.Lenis) {
+  const lenis = new Lenis({ lerp: 0.085 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+  document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); lenis.scrollTo(a.getAttribute('href')); }));
+}
+if (fine) {
+  const cur = document.getElementById('cur'), ring = document.getElementById('ring');
+  let x = innerWidth / 2, y = innerHeight / 2, rx = x, ry = y;
+  addEventListener('mousemove', e => { x = e.clientX; y = e.clientY; cur.style.transform = `translate(${x}px,${y}px)`; });
+  gsap.ticker.add(() => { rx += (x - rx) * .18; ry += (y - ry) * .18; ring.style.transform = `translate(${rx}px,${ry}px)`; });
+  document.querySelectorAll('a, .tilt, .test').forEach(el => { el.addEventListener('mouseenter', () => ring.classList.add('big')); el.addEventListener('mouseleave', () => ring.classList.remove('big')); });
+}
+ScrollTrigger.create({ start: 60, onToggle: s => document.getElementById('nav').classList.toggle('solid', s.isActive) });
+
+// ---------------- renderer, scene, glow ----------------
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(C.bg, 10, 28);
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+const CAM_Z = 8.4;
+camera.position.set(0, 0, CAM_Z);
+scene.add(camera);
+const LITE = innerWidth < 700 || (navigator.hardwareConcurrency || 8) <= 4;   // phones and low-power machines skip the glow pass
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), .38, .55, .86);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+scene.add(new THREE.AmbientLight('#ffd9b8', .35));
+const key = new THREE.PointLight('#ffb47a', 45, 30); key.position.set(-3, 4, 5); scene.add(key);
+const rim = new THREE.PointLight(C.copper, 70, 30); rim.position.set(4, 2, -4); scene.add(rim);
+const warm = new THREE.PointLight(C.hot, 0, 20); warm.position.set(0, 1, 3); scene.add(warm);
+
+// living background: a slow mocha/oxblood flow that ripples around the cursor (custom shader)
+const bgMat = new THREE.ShaderMaterial({
+  depthWrite: false, depthTest: false,
+  uniforms: { uTime: { value: 0 }, uMouse: { value: new THREE.Vector2(.5, .5) }, uScroll: { value: 0 }, uAspect: { value: 1 }, uRed: { value: 0 } },
+  vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 1.0, 1.0); }',
+  fragmentShader: `
+    precision highp float; varying vec2 vUv; uniform float uTime, uScroll, uAspect, uRed; uniform vec2 uMouse;
+    float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+    float n(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.-2.*f);
+      return mix(mix(h(i), h(i+vec2(1,0)), f.x), mix(h(i+vec2(0,1)), h(i+vec2(1,1)), f.x), f.y); }
+    float fbm(vec2 p){ float v = 0., a = .5; for (int i = 0; i < 5; i++) { v += a * n(p); p *= 2.02; a *= .5; } return v; }
+    void main(){
+      vec2 uv = vUv; vec2 p = (uv - .5) * vec2(uAspect, 1.);
+      vec2 m = (uMouse - .5) * vec2(uAspect, 1.); float d = length(p - m);
+      p += normalize(p - m + 1e-4) * .045 * sin(d * 18. - uTime * 2.2) * exp(-d * 3.5);   // ripple around the cursor
+      float t = uTime * .045 + uScroll * .6;
+      float f = fbm(p * 1.6 + vec2(t, -t * .7) + fbm(p * 2.3 - t) * .8);
+      vec3 base = vec3(.086, .063, .051), mocha = vec3(.23, .14, .095), ox = vec3(.30, .09, .10), cop = vec3(.88, .57, .35);
+      vec3 col = mix(base, mocha, smoothstep(.45, .92, f) * .75);
+      col = mix(col, ox, smoothstep(.55, .95, fbm(p * 1.1 - t * .8)) * .55);
+      col += cop * pow(smoothstep(.66, .92, f), 3.) * .18;                    // copper glints in the flow
+      col += cop * exp(-d * 6.) * .05;                                         // soft light under the cursor
+      col = mix(col, vec3(.30, .04, .03), uRed * .38);                         // the crash turns the room red
+      col *= 1. - .65 * smoothstep(.35, 1.15, length((uv - .5) * vec2(uAspect * .8, 1.)));   // vignette
+      gl_FragColor = vec4(col, 1.);
+    }`
+});
+const bg = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), bgMat); bg.frustumCulled = false; bg.renderOrder = -10; scene.add(bg);
+
+// warm dust
+const dust = (() => {
+  const n = LITE ? 600 : 1800, pos = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { const r = 6 + Math.random() * 18, t = Math.random() * Math.PI * 2, p = Math.acos(2 * Math.random() - 1);
+    pos.set([r * Math.sin(p) * Math.cos(t), r * Math.cos(p) * .6, r * Math.sin(p) * Math.sin(t) - 6], i * 3); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const m = new THREE.Points(g, new THREE.PointsMaterial({ color: '#ffcf9e', size: .03, transparent: true, opacity: .55, depthWrite: false }));
+  scene.add(m); return m;
+})();
+
+function glowTex(stops) {
+  const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
+  const gr = g.createRadialGradient(128, 128, 0, 128, 128, 128); stops.forEach(([o, col]) => gr.addColorStop(o, col));
+  g.fillStyle = gr; g.fillRect(0, 0, 256, 256); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+
+// --- me, with orbiting numbers ---
+const me = new THREE.Group(); scene.add(me);
+const halo = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 6.4), new THREE.MeshBasicMaterial({
+  map: glowTex([[0, 'rgba(255,210,168,.95)'], [.35, 'rgba(224,145,90,.75)'], [.62, 'rgba(94,31,35,.45)'], [1, 'rgba(0,0,0,0)']]), transparent: true, depthWrite: false }));
+halo.position.set(0, .7, -.3); me.add(halo);
+const ringM = new THREE.Mesh(new THREE.TorusGeometry(2.4, .014, 8, 180), new THREE.MeshBasicMaterial({ color: C.hi, transparent: true, opacity: .55 }));
+ringM.position.set(0, .7, -.2); me.add(ringM);
+const photo = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ transparent: true, alphaTest: .5 }));
+me.add(photo);
+const ICON = {};
+['qwen-color', 'gemma-bright', 'apple-light'].forEach(n => { const im = new Image(); im.src = `icons/${n}.svg`; ICON[n] = im; });
+function labelTex(title, value, col, icon) {
+  const c = document.createElement('canvas'); c.width = 680; c.height = 150; const g = c.getContext('2d');
+  g.fillStyle = 'rgba(30,21,16,.9)'; g.strokeStyle = 'rgba(255,210,168,.5)'; g.lineWidth = 3;
+  g.beginPath(); g.roundRect(4, 4, 672, 142, 28); g.fill(); g.stroke();
+  let x = 34; if (icon && ICON[icon]?.complete) { if (!icon.endsWith('light')) { g.fillStyle = icon.startsWith('gemma') ? '#101a33' : '#f5ebdd'; g.beginPath(); g.roundRect(24, 27, 96, 96, 22); g.fill(); }
+    g.drawImage(ICON[icon], 36, 39, 72, 72); x = 136; }
+  g.font = '600 36px "JetBrains Mono", monospace'; g.fillStyle = '#f5ebdd'; g.fillText(title, x, 90);
+  g.font = '800 52px Archivo, sans-serif'; g.fillStyle = col; const w = g.measureText(value).width; g.fillText(value, 646 - w, 94);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const orbit = new THREE.Group(); me.add(orbit);
+const LABELS = [['Qwen 3.8 27B', '17.5', C.hi, 'qwen-color'], ['Gemma 4 E2B', '54 t/s', C.hi, 'gemma-bright'], ['Qwen 3.6 35B', '40 t/s', C.hi, 'qwen-color'], ['M5 RAM', '31/32', '#ff7a5c', 'apple-light'], ['oMLX restart', '7 s', C.hi]];
+const chips3d = LABELS.map(([a, v, c, ic]) => { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: labelTex(a, v, c, ic), transparent: true }));
+  sp.scale.set(1.6, .353, 1); orbit.add(sp); return sp; });
+// redraw the labels once the logos have loaded
+Promise.all(Object.values(ICON).map(im => im.decode().catch(() => {}))).then(() => chips3d.forEach((sp, i) => { sp.material.map = labelTex(...LABELS[i]); sp.material.needsUpdate = true; }));
+
+// --- the copper laptop ---
+const laptop = new THREE.Group(); scene.add(laptop);
+const copperMat = new THREE.MeshPhysicalMaterial({ color: '#c98a62', metalness: 1, roughness: .3, clearcoat: .4, clearcoatRoughness: .2 });
+const dark = new THREE.MeshStandardMaterial({ color: '#120c09', metalness: .4, roughness: .6 });
+const base = new THREE.Mesh(new RoundedBoxGeometry(3.3, .14, 2.25, 4, .06), copperMat); base.position.y = .07; laptop.add(base);
+const keys = new THREE.Mesh(new THREE.PlaneGeometry(2.9, .95), dark); keys.rotation.x = -Math.PI / 2; keys.position.set(0, .142, -.32); laptop.add(keys);
+const pad = new THREE.Mesh(new THREE.PlaneGeometry(1.25, .72), new THREE.MeshStandardMaterial({ color: '#b98565', metalness: .9, roughness: .45 }));
+pad.rotation.x = -Math.PI / 2; pad.position.set(0, .142, .6); laptop.add(pad);
+const caps = new THREE.InstancedMesh(new THREE.BoxGeometry(.17, .02, .17), new THREE.MeshStandardMaterial({ color: '#1c130e', roughness: .7 }), 70);
+{ let k = 0; const o = new THREE.Object3D(); for (let r = 0; r < 5; r++) for (let c = 0; c < 14; c++) { o.position.set(-1.33 + c * .205, .152, -.7 + r * .19); o.updateMatrix(); caps.setMatrixAt(k++, o.matrix); } }
+laptop.add(caps);
+const lid = new THREE.Group(); lid.position.set(0, .14, -1.1); laptop.add(lid);
+const lidMesh = new THREE.Mesh(new RoundedBoxGeometry(3.3, 2.15, .09, 4, .045), copperMat); lidMesh.position.set(0, 1.075, 0); lid.add(lidMesh);
+const bezel = new THREE.Mesh(new THREE.PlaneGeometry(3.18, 2.03), new THREE.MeshBasicMaterial({ color: '#030202' })); bezel.position.set(0, 1.075, .047); lid.add(bezel);
+const sc = document.createElement('canvas'); sc.width = 1024; sc.height = 640; const sg = sc.getContext('2d');
+const screenTex = new THREE.CanvasTexture(sc); screenTex.colorSpace = THREE.SRGBColorSpace; screenTex.anisotropy = 8;
+const screen = new THREE.Mesh(new THREE.PlaneGeometry(3.02, 1.89), new THREE.MeshBasicMaterial({ map: screenTex, toneMapped: false }));
+screen.position.set(0, 1.08, .049); lid.add(screen);
+const screenGlow = new THREE.PointLight('#ffb47a', 2.5, 5); screenGlow.position.set(0, 1.1, .8); lid.add(screenGlow);
+
+function drawScreen(gb) {
+  const g = sg, W = 1024, H = 640;
+  g.fillStyle = '#0b0705'; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#1a120d'; g.fillRect(0, 0, W, 46);
+  ['#ff5f57', '#febc2e', '#28c840'].forEach((c, i) => { g.fillStyle = c; g.beginPath(); g.arc(30 + i * 26, 23, 8, 0, 7); g.fill(); });
+  g.font = '600 20px "JetBrains Mono", monospace'; g.fillStyle = '#8a7564'; g.fillText('Activity Monitor · Memory', 380, 30);
+  const col = gb >= 31 ? '#ff4a2e' : gb > 24 ? '#ffd2a8' : '#e0915a';
+  g.font = '800 150px Archivo, sans-serif'; g.fillStyle = col; g.fillText(Math.round(gb) + ' GB', 60, 280);
+  g.font = '600 26px "JetBrains Mono"'; g.fillStyle = '#c2ad98'; g.fillText('memory used of 32 GB', 66, 330);
+  g.fillStyle = '#2a1e17'; g.fillRect(60, 380, 904, 70); g.fillStyle = col; g.fillRect(60, 380, 904 * gb / 32, 70);
+  g.font = '700 26px "JetBrains Mono"'; g.fillStyle = gb >= 31 ? '#ff4a2e' : '#c2ad98';
+  g.fillText(gb >= 31 ? 'MEMORY PRESSURE: CRITICAL' : 'memory pressure: ' + (gb > 24 ? 'high' : 'normal'), 60, 510);
+  screenTex.needsUpdate = true;
+}
+
+// --- 32 memory blocks ---
+const blocks = new THREE.Group(); scene.add(blocks);
+const CAT = [[C.mocha, 6], ['#a8896f', 3], [C.copper, 16], [C.hi, 6], [C.copper, 1]];
+const blockColor = []; CAT.forEach(([c, n]) => { for (let i = 0; i < n; i++) blockColor.push(new THREE.Color(c)); });
+const bGeo = new RoundedBoxGeometry(.5, .3, .5, 3, .05), cells = [];
+const OFF = new THREE.Color('#1f1712'), RED = new THREE.Color('#ff3a24'), BLACK = new THREE.Color('#000000');
+for (let i = 0; i < 32; i++) {
+  const m = new THREE.MeshPhysicalMaterial({ color: OFF.clone(), metalness: .6, roughness: .28, emissive: '#000000', emissiveIntensity: .62, clearcoat: 1 });
+  const b = new THREE.Mesh(bGeo, m); const col = i % 8, row = Math.floor(i / 8);
+  b.userData.home = new THREE.Vector3(-1.82 + col * .52, row * .36 - .54, 0);
+  b.userData.dir = new THREE.Vector3(Math.random() - .3, Math.random() * .9 - .2, -Math.random() * .8).normalize().multiplyScalar(2.5 + Math.random() * 3.5);
+  b.userData.spin = new THREE.Vector3(Math.random() * 6, Math.random() * 6, Math.random() * 6);
+  b.position.copy(b.userData.home); blocks.add(b); cells.push(b);
+}
+
+// ---------------- scroll state ----------------
+const S = { hero: 0, crash: 0, out: 0 };
+const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+addEventListener('pointermove', e => { mouse.tx = e.clientX / innerWidth - .5; mouse.ty = e.clientY / innerHeight - .5; });
+ScrollTrigger.create({ trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true, onUpdate: s => S.hero = s.progress });
+ScrollTrigger.create({ trigger: '#crash', start: 'top top', end: 'bottom bottom', scrub: true, onUpdate: s => { S.crash = s.progress; crashText(s.progress); } });
+ScrollTrigger.create({ trigger: '#about', start: 'top bottom', end: 'top 20%', scrub: true, onUpdate: s => S.out = s.progress });
+
+const lerp = (a, b, t) => a + (b - a) * t, clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const F_FILL = .62, F_RED = .70, F_BOOM = .80, F_DARK = .88;
+const filledGB = c => c > F_DARK ? 22 : c < F_FILL ? 31 * ease(c / F_FILL) : 31;
+const steps = [...document.querySelectorAll('#crash .steps p')], gbEl = document.getElementById('gb'), black = document.getElementById('blackout');
+function crashText(c) {
+  const i = c < .2 ? 0 : c < .4 ? 1 : c < F_RED ? 2 : c < F_DARK + .04 ? 3 : 4;
+  steps.forEach((p, k) => p.style.opacity = k === i ? 1 : 0);
+  gbEl.firstChild.nodeValue = Math.round(filledGB(c));
+  gbEl.style.color = c >= F_FILL - .01 && c < F_DARK ? '#ff5a3d' : '';
+  black.style.opacity = c > F_BOOM ? clamp(1 - Math.abs(c - (F_BOOM + F_DARK) / 2) / ((F_DARK - F_BOOM) / 2 + .02)) : 0;
+}
+
+// ---------------- responsive layout ----------------
+// Everything is placed by screen position (-1..1), so it fits any screen. Wide screens: 3D on the right of the text.
+// Tall screens (phones, portrait tablets): 3D above the text in the hero and below it in the crash story.
+const V = { halfW: 1, halfH: 1, tall: false, k: 1 };
+function layout() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setPixelRatio(Math.min(devicePixelRatio, LITE ? 1.25 : 2));
+  renderer.setSize(w, h, false); composer.setSize(w, h); bloom.setSize(w / 2, h / 2);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+  V.halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * CAM_Z; V.halfW = V.halfH * camera.aspect;
+  V.tall = w / h < 1.2 || w < 860;
+  V.k = V.tall ? clamp(V.halfW / 2.15, .35, .95) : clamp(V.halfW / 4.3, .62, 1);
+  bgMat.uniforms.uAspect.value = w / h;
+  if (photo.material.map) { const img = photo.material.map.image; photo.scale.set(5.0 * img.width / img.height, 5.0, 1); }
+}
+addEventListener('resize', layout);
+function place(obj, xn, yn, z) { const f = (CAM_Z - z) / CAM_Z; obj.position.set(xn * V.halfW * f, yn * V.halfH * f, z); }
+
+// ---------------- render loop ----------------
+const clock = new THREE.Clock(); let lastGB = -1;
+function frame() {
+  requestAnimationFrame(frame);
+  const t = clock.getElapsedTime();
+  mouse.x += (mouse.tx - mouse.x) * .05; mouse.y += (mouse.ty - mouse.y) * .05;
+  const c = S.crash, out = ease(S.out), hero = ease(S.hero), T = V.tall, k = V.k;
+
+  // me
+  if (T) place(me, 0, lerp(.47, .6, hero), lerp(-1, -5, hero)); else place(me, lerp(.48, .78, hero), lerp(-.05, .1, hero), lerp(-1, -5, hero));
+  me.position.y -= out * 8;
+  me.scale.setScalar((T ? Math.min(.5, V.halfW / 2.5) : k) * lerp(1, .8, hero));
+  me.rotation.y = mouse.x * .18; me.rotation.x = mouse.y * .06;
+  photo.material.opacity = halo.material.opacity = 1 - hero * .92;
+  ringM.material.opacity = .55 - hero * .5; ringM.rotation.z = t * .15;
+  chips3d.forEach((sp, i) => { const a = t * .35 + i * Math.PI * 2 / chips3d.length;
+    sp.position.set(Math.cos(a) * (T ? 1.45 : 1.7), .6 + Math.sin(a * 1.3) * .9, Math.sin(a) * 1.3); sp.material.opacity = (1 - hero) * (.55 + (Math.sin(a) + 1) * .22); });
+
+  // laptop rises from below and opens as you scroll
+  const rise = ease(clamp(S.hero * 1.25)), open = ease(clamp((S.hero - .35) / .55));
+  lid.rotation.x = lerp(Math.PI / 2, -.32, open);
+  if (T) place(laptop, 0, lerp(-1.6, -.78, rise), .4); else place(laptop, .55, lerp(-1.8, -.5, rise), .4);
+  laptop.position.y -= out * 8;
+  laptop.rotation.set(lerp(.6, .32, rise) + mouse.y * .08, lerp(-1.2, -.5, rise) + mouse.x * .25 + Math.sin(t * .5) * .04, 0);
+  laptop.scale.setScalar((T ? .44 : .6) * k / (T ? .95 : 1));
+  const gb = filledGB(c); if (Math.round(gb * 2) !== lastGB) { drawScreen(gb); lastGB = Math.round(gb * 2); }
+
+  // memory blocks
+  const show = clamp(S.hero * 1.4 - .3);
+  if (T) place(blocks, 0, -.32, -.4); else place(blocks, .5, .3, -.4);
+  blocks.position.y -= out * 8;
+  blocks.scale.setScalar(Math.max(.001, ease(show)) * (T ? .5 : .74) * k / (T ? .95 : 1));
+  blocks.rotation.set(.12 + mouse.y * .1, -.42 + mouse.x * .3, 0);
+  const red = c >= F_FILL && c < F_DARK, boom = clamp((c - F_RED) / (F_BOOM - F_RED)), back = clamp((c - F_DARK) / (1 - F_DARK));
+  const ex = back > 0 ? 1 - ease(back) : ease(boom);
+  cells.forEach((b, i) => {
+    const on = i < gb;
+    b.material.emissive.lerp(red ? RED : on ? blockColor[i] : BLACK, .15);
+    b.material.color.lerp(on || red ? blockColor[i] : OFF, .15);
+    const u = b.userData;
+    b.position.set(u.home.x + u.dir.x * ex, u.home.y + u.dir.y * ex + (on && !red ? Math.sin(t * 3 + i) * .02 : 0), u.home.z + u.dir.z * ex);
+    b.rotation.set(u.spin.x * ex, u.spin.y * ex, u.spin.z * ex);
+  });
+  warm.intensity = red ? 16 + Math.sin(t * 20) * 10 : lerp(warm.intensity, 0, .1);
+  key.color.set(red ? '#ff7a5c' : '#ffb47a');
+  bgMat.uniforms.uRed.value = lerp(bgMat.uniforms.uRed.value, red ? 1 : 0, .08);
+
+  // camera: a slow dolly through the story, shaking during the crash
+  const story = clamp((S.hero + c) / 2);
+  const shake = red && boom < 1 && !reduce ? .06 : 0;
+  camera.position.set(mouse.x * .5 + Math.sin(story * Math.PI) * .35 + (Math.random() - .5) * shake, -mouse.y * .3 + (Math.random() - .5) * shake, CAM_Z - Math.sin(story * Math.PI) * .9);
+  camera.lookAt(0, 0, 0);
+  bloom.strength = red ? .6 : .38;
+
+  dust.rotation.y = t * .015 + scrollY * .00025; dust.position.y = scrollY * .0012;
+  bgMat.uniforms.uTime.value = reduce ? 0 : t; bgMat.uniforms.uScroll.value = scrollY / innerHeight;
+  bgMat.uniforms.uMouse.value.set(mouse.x + .5, .5 - mouse.y);
+  LITE ? renderer.render(scene, camera) : composer.render();
+}
+
+// ---------------- boot ----------------
+const bootN = document.getElementById('bootn');
+gsap.to({ v: 0 }, { v: 100, duration: 1.2, ease: 'power2.inOut', onUpdate() { bootN.textContent = Math.round(this.targets()[0].v) + '%'; } });
+new THREE.TextureLoader().load('portrait_laptop.webp', tex => {
+  tex.colorSpace = THREE.SRGBColorSpace; photo.material.map = tex; photo.material.needsUpdate = true;
+  layout(); drawScreen(0); frame();
+  setTimeout(() => {
+    document.getElementById('boot').classList.add('done');
+    const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+    tl.from(halo.scale, { x: .3, y: .3, duration: 1.6 }, 0)
+      .from(photo.position, { y: -2.5, duration: 1.6 }, .1)
+      .from(orbit.scale, { x: .01, y: .01, z: .01, duration: 1.4, ease: 'back.out(1.6)' }, .6)
+      .from('#h1 .w > span', { yPercent: 110, duration: 1.1, stagger: .06 }, .3)
+      .from('.reveal-in', { y: 24, opacity: 0, duration: .8, stagger: .1 }, .8);
+  }, 1300);
+});
+
+// ---------------- DOM motion ----------------
+function count(el) { const to = +el.dataset.count, dec = +(el.dataset.dec || 0), suf = el.dataset.suffix || '', o = { v: 0 };
+  gsap.to(o, { v: to, duration: 1.6, ease: 'power3.out', onUpdate: () => el.textContent = (to >= 1000 ? Math.round(o.v).toLocaleString('en-US') : o.v.toFixed(dec)) + suf }); }
+document.querySelectorAll('.stat [data-count], .card [data-count]').forEach(el => ScrollTrigger.create({ trigger: el, start: 'top 92%', once: true, onEnter: () => count(el) }));
+gsap.utils.toArray('.reveal').forEach(el => gsap.from(el, { y: 60, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 92%' } }));
+gsap.from('.card', { y: 100, opacity: 0, rotationX: -25, transformPerspective: 900, duration: 1.1, stagger: .12, ease: 'power3.out', scrollTrigger: { trigger: '.machines', start: 'top 85%' } });
+document.querySelectorAll('.card .cap i').forEach(i => gsap.to(i, { width: i.dataset.fill + '%', duration: 1.4, ease: 'power3.out', scrollTrigger: { trigger: i, start: 'top 95%' } }));
+gsap.fromTo('#portrait img', { y: 60 }, { y: -30, ease: 'none', scrollTrigger: { trigger: '#about', start: 'top bottom', end: 'bottom top', scrub: true } });
+gsap.fromTo('#portrait .disc', { scale: .7 }, { scale: 1.04, ease: 'none', scrollTrigger: { trigger: '#about', start: 'top bottom', end: 'center center', scrub: true } });
+gsap.utils.toArray('#portrait .float').forEach((f, i) => gsap.to(f, { y: (i % 2 ? 1 : -1) * 16, duration: 2.4 + i * .4, yoyo: true, repeat: -1, ease: 'sine.inOut' }));
+if (fine) document.querySelectorAll('.tilt').forEach(card => {
+  card.addEventListener('mousemove', e => { const b = card.getBoundingClientRect(), px = (e.clientX - b.left) / b.width - .5, py = (e.clientY - b.top) / b.height - .5;
+    card.style.transform = `perspective(900px) rotateY(${px * 18}deg) rotateX(${-py * 18}deg) translateZ(12px)`; });
+  card.addEventListener('mouseleave', () => card.style.transform = '');
+});
+document.querySelectorAll('.track').forEach((t, i) => { const bar = t.querySelector('i'), num = t.querySelector('[data-count]');
+  ScrollTrigger.create({ trigger: t, start: 'top 90%', once: true, onEnter: () => { gsap.to(bar, { width: (+bar.dataset.w / 60 * 100) + '%', duration: 1.8, delay: i * .12, ease: 'power2.out' }); setTimeout(() => count(num), i * 120); } }); });
+(() => { const rail = document.getElementById('rail'), cards = gsap.utils.toArray('.test');
+  gsap.to(rail, { x: () => -(rail.scrollWidth - innerWidth + 60), ease: 'none', scrollTrigger: { trigger: '#tests', start: 'top top', end: 'bottom bottom', scrub: .6, invalidateOnRefresh: true,
+    onUpdate: () => cards.forEach(c => { const b = c.getBoundingClientRect(), d = (b.left + b.width / 2 - innerWidth / 2) / innerWidth;
+      const q = Math.max(-1, Math.min(1, d)); c.style.transform = `perspective(1200px) rotateY(${-q * 28}deg) scale(${1 - Math.abs(q) * .12})`; }) } }); })();
 </script>
 </body>
 </html>
