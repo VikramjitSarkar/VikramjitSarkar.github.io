@@ -19,7 +19,7 @@
 { "@context": "https://schema.org", "@graph": [
   { "@type": "WebSite", "@id": "https://vikramjitsarkar.github.io/#site", "url": "https://vikramjitsarkar.github.io/", "name": "IamVikramjit · Local AI Lab", "publisher": { "@id": "https://vikramjitsarkar.github.io/#me" } },
   { "@type": "Person", "@id": "https://vikramjitsarkar.github.io/#me", "name": "Vikramjit Sarkar", "alternateName": "IamVikramjit", "jobTitle": "Developer and tech creator",
-    "url": "https://vikramjitsarkar.github.io/", "image": "https://vikramjitsarkar.github.io/me_suit_standing.png",
+    "url": "https://vikramjitsarkar.github.io/", "image": "https://vikramjitsarkar.github.io/portrait_arms.png",
     "sameAs": ["https://www.youtube.com/@IamVikramjit", "https://www.instagram.com/iam.vikramjit/", "https://x.com/VikramjitSarkar", "https://www.facebook.com/IamVikramjit", "https://github.com/VikramjitSarkar"],
     "knowsAbout": ["Local LLMs", "Apple Silicon", "MLX", "LM Studio", "Qwen", "Gemma", "AI coding agents", "GPU benchmarks"] } ] }
 </script>
@@ -314,7 +314,7 @@
 <section class="sec solid-bg" id="about"><div class="wrap about">
   <div class="portrait" id="portrait">
     <div class="disc"></div>
-    <img src="me_suit_standing.webp" width="760" height="1430" loading="lazy" alt="Vikramjit Sarkar in a navy suit and white shirt, smiling">
+    <img src="portrait_arms.webp" width="1122" height="1402" loading="lazy" alt="Vikramjit in a navy suit, arms crossed, smiling">
     <div class="float" style="left:0;top:22%">tok/s <b>80.5</b></div>
     <div class="float" style="right:0;top:42%">RAM <b>31/32 GB</b></div>
     <div class="float" style="left:4%;bottom:14%">tests <b>10 queued</b></div>
@@ -579,7 +579,7 @@ const halo = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 6.4), new THREE.MeshBas
 halo.position.set(0, .7, -.3); me.add(halo);
 const ringM = new THREE.Mesh(new THREE.TorusGeometry(2.4, .014, 8, 180), new THREE.MeshBasicMaterial({ color: C.hi, transparent: true, opacity: .55 }));
 ringM.position.set(0, .7, -.2); me.add(ringM);
-const photo = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ transparent: true, alphaTest: .02 }));
+const photo = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ transparent: true, alphaTest: .5 }));
 me.add(photo);
 const ICON = {};
 ['qwen-color', 'gemma-bright', 'apple-light'].forEach(n => { const im = new Image(); im.src = `icons/${n}.svg`; ICON[n] = im; });
@@ -752,7 +752,7 @@ function frame() {
 // ---------------- boot ----------------
 const bootN = document.getElementById('bootn');
 gsap.to({ v: 0 }, { v: 100, duration: 1.2, ease: 'power2.inOut', onUpdate() { bootN.textContent = Math.round(this.targets()[0].v) + '%'; } });
-new THREE.TextureLoader().load('me_suit_smile.webp', tex => {
+new THREE.TextureLoader().load('portrait_laptop.webp', tex => {
   tex.colorSpace = THREE.SRGBColorSpace; photo.material.map = tex; photo.material.needsUpdate = true;
   layout(); drawScreen(0); frame();
   setTimeout(() => {
