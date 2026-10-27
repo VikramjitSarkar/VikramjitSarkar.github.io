@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://vikramjitsarkar.github.io/</loc><lastmod>2026-10-23</lastmod><priority>1.0</priority></url>
-  <url><loc>https://vikramjitsarkar.github.io/work-with-me/</loc><lastmod>2026-10-23</lastmod><priority>0.8</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url><loc>https://vikramjitsarkar.github.io/</loc><lastmod>2026-10-27</lastmod><priority>1.0</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/</loc><lastmod>2026-10-27</lastmod><priority>0.9</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/work-with-me/</loc><lastmod>2026-10-27</lastmod><priority>0.7</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/why-your-mac-crashes-running-local-ai-its-not-the-model/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/i-ran-a-35b-ai-model-on-a-16gb-gpu-it-shouldnt-fit/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/how-to-run-local-ai-coding-on-mac-for-free-opencode-lm-studio/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/does-local-ai-coding-actually-work-yet-5-months-on-a-32gb/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/is-local-llm-vibe-coding-possible-on-a-32gb-macbook-pro-m5-can/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/qwen-3-8-27b-on-a-32gb-macbook-stuck-82-min-then-built-minecraft/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/gemma-4-xcode-on-m5-local-ai-coding-actually-works-now/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/qwen-3-6-built-an-ios-app-locally-then-crashed-gemma-4-qat-took/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/mlx-update-changed-everything-kv-cache-on-ssd-live-proof/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/apple-just-made-local-ai-coding-official-xcode-lm-studio-setup/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/apples-official-local-llm-ai-coding-in-xcode-mlx-qwen-3-6-and/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/mac-air-vs-pro-16gb-vs-32gb-cancel-claude-your-local-ai/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/can-a-local-llm-build-a-production-app-on-m5-the-honest-verdict/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/2-400-macbook-vs-20-claude-code-the-honest-local-ai-math/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/dropped-ollama-and-lm-studio-for-omlx-on-my-macbook-pro-m5/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/yes-you-can-code-100-with-local-llm-if-you-pick-the-right-tools/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/why-finish-the-app-is-a-huge-prompt-for-local-ai/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/gemma-4-12b-vs-qwen-for-local-coding-the-honest-verdict/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/how-to-get-128k-context-locally-on-a-mac-omlx-qwen-3-6-ssd/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/local-ai-crashed-my-macbook-m5-out-of-memory-at-32gb/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/local-ai-coding-got-chaotic-gemma-4-12b-4-bit-vs-8-bit-on-m5/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/gemma-4-12b-4-bit-vs-8-bit-vibe-coding-stress-test-on-macbook/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/i-tested-gemma-4-12b-on-a-32gb-m5-coding-vision-full-stress-test/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/local-llm-vibe-coding-on-macbook-pro-m5-the-honest-truth-qwen-3/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/m1-vs-m5-macbook-pro-running-gemma-locally-the-real-token-s-gap/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vikramjitsarkar.github.io/videos/i-was-wrong-about-local-llm-vs-claude-on-m5-macbook-pro-tested/</loc><lastmod>2026-10-27</lastmod><priority>0.8</priority></url>
 </urlset>

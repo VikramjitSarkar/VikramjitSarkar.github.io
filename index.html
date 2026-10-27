@@ -19,8 +19,8 @@
 { "@context": "https://schema.org", "@graph": [
   { "@type": "WebSite", "@id": "https://vikramjitsarkar.github.io/#site", "url": "https://vikramjitsarkar.github.io/", "name": "IamVikramjit · Local AI Lab", "publisher": { "@id": "https://vikramjitsarkar.github.io/#me" } },
   { "@type": "Person", "@id": "https://vikramjitsarkar.github.io/#me", "name": "Vikramjit Sarkar", "alternateName": "IamVikramjit", "jobTitle": "Developer and tech creator",
-    "url": "https://vikramjitsarkar.github.io/", "image": "https://vikramjitsarkar.github.io/portrait_arms.png",
-    "sameAs": ["https://www.youtube.com/@IamVikramjit", "https://www.instagram.com/iam.vikramjit/", "https://x.com/VikramjitSarkar"],
+    "url": "https://vikramjitsarkar.github.io/", "image": "https://vikramjitsarkar.github.io/me_suit_standing.png",
+    "sameAs": ["https://www.youtube.com/@IamVikramjit", "https://www.instagram.com/iam.vikramjit/", "https://x.com/VikramjitSarkar", "https://www.facebook.com/IamVikramjit", "https://github.com/VikramjitSarkar"],
     "knowsAbout": ["Local LLMs", "Apple Silicon", "MLX", "LM Studio", "Qwen", "Gemma", "AI coding agents", "GPU benchmarks"] } ] }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -262,6 +262,10 @@
     .duel > div { padding: 24px; }
   }
   @media (prefers-reduced-motion: reduce) { .logo i, footer .btn, .track i::after, .scroll-hint i::after { animation: none; } }
+  .reels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; align-items: start; margin-top: 30px; }
+  .reels .instagram-media { min-width: 0 !important; width: 100% !important; margin: 0 !important; border-radius: 16px !important; }
+  .reels blockquote > a { display: block; padding: 60px 16px; text-align: center; color: var(--copper-hi); border: 1px solid var(--line); border-radius: 16px; background: var(--panel); }
+  @media (max-width: 900px) { .reels { grid-template-columns: 1fr; max-width: 420px; } }
 </style>
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
 </head>
@@ -273,7 +277,7 @@
 
 <nav id="nav"><div class="wrap">
   <a class="logo" href="#hero"><i></i>IamVikramjit <small>LOCAL AI LAB</small></a>
-  <div class="links"><a href="#crash">The crash</a><a href="#about">About</a><a href="#machines">Machines</a><a href="#models">Will it run?</a><a href="#numbers">Numbers</a><a href="#tests">Next tests</a><a href="work-with-me/">Work with me</a></div>
+  <div class="links"><a href="#crash">The crash</a><a href="#about">About</a><a href="#machines">Machines</a><a href="#models">Will it run?</a><a href="#numbers">Numbers</a><a href="videos/">Videos</a><a href="#instagram">Instagram</a><a href="work-with-me/">Work with me</a></div>
   <a class="btn" href="https://www.youtube.com/@IamVikramjit?sub_confirmation=1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.7 15.1V8.9l5.8 3.1-5.8 3.1z"/></svg><span>Subscribe</span></a>
 </div></nav>
 
@@ -310,8 +314,8 @@
 <section class="sec solid-bg" id="about"><div class="wrap about">
   <div class="portrait" id="portrait">
     <div class="disc"></div>
-    <img src="portrait_arms.webp" width="1122" height="1402" loading="lazy" alt="Vikramjit in a navy suit, arms crossed, smiling">
-    <div class="float" style="left:0;top:22%">tok/s <b>54.0</b></div>
+    <img src="me_suit_standing.webp" width="760" height="1430" loading="lazy" alt="Vikramjit Sarkar in a navy suit and white shirt, smiling">
+    <div class="float" style="left:0;top:22%">tok/s <b>80.5</b></div>
     <div class="float" style="right:0;top:42%">RAM <b>31/32 GB</b></div>
     <div class="float" style="left:4%;bottom:14%">tests <b>10 queued</b></div>
   </div>
@@ -319,11 +323,11 @@
     <p class="kicker reveal">// WHO'S TESTING</p>
     <h2 class="reveal">Hi, I'm Vikramjit.</h2>
     <p class="big reveal">I'm a developer. I buy the laptops, run the models, and show you the real numbers. <span>Including the nights when it all goes wrong.</span></p>
-    <div class="ctas reveal"><a class="ghost" href="https://www.youtube.com/@IamVikramjit">YouTube · IamVikramjit</a><a class="ghost" href="https://www.instagram.com/iam.vikramjit/">Instagram</a><a class="ghost" href="https://x.com/VikramjitSarkar">X</a></div>
+    <div class="ctas reveal"><a class="ghost" href="https://www.youtube.com/@IamVikramjit">YouTube · IamVikramjit</a><a class="ghost" href="https://www.instagram.com/iam.vikramjit/">Instagram</a><a class="ghost" href="https://x.com/VikramjitSarkar">X</a><a class="ghost" href="https://www.facebook.com/IamVikramjit">Facebook</a><a class="ghost" href="videos/">All videos</a></div>
     <div class="stats">
       <div class="stat reveal"><strong data-count="1000" data-suffix="+">0</strong><span>subscribers</span></div>
       <div class="stat reveal"><strong data-count="4">0</strong><span>real machines, no cloud</span></div>
-      <div class="stat reveal"><strong data-count="54">0</strong><span>tok/s, fastest run</span></div>
+      <div class="stat reveal"><strong data-count="80">0</strong><span>tok/s, fastest run (RTX 4080)</span></div>
       <div class="stat reveal"><strong data-count="82" data-suffix=" min">0</strong><span>longest a model "thought"</span></div>
     </div>
   </div>
@@ -420,13 +424,25 @@
 </div></section>
 
 <section class="sec solid-bg" id="videos"><div class="wrap">
-  <p class="kicker reveal">// START HERE</p>
+  <p class="kicker reveal">// NEWEST TESTS</p>
+  <h2 class="reveal">Fresh from the lab.</h2>
+  <div class="vids"><a class="vid reveal" href="videos/why-your-mac-crashes-running-local-ai-its-not-the-model/"><div class="th"><img src="https://i.ytimg.com/vi/fD8KuCMvtBU/hqdefault.jpg" alt="Thumbnail: Why Your Mac Crashes Running Local AI (It's Not the Model)" loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>Why Your Mac Crashes Running Local AI (It's Not the Model)</h3><p>27 Oct 2026</p></div></a><a class="vid reveal" href="videos/i-ran-a-35b-ai-model-on-a-16gb-gpu-it-shouldnt-fit/"><div class="th"><img src="https://i.ytimg.com/vi/ZypAda9_w-c/hqdefault.jpg" alt="Thumbnail: I Ran a 35B AI Model on a 16GB GPU. It Shouldn't Fit." loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>I Ran a 35B AI Model on a 16GB GPU. It Shouldn't Fit.</h3><p>27 Oct 2026</p></div></a><a class="vid reveal" href="videos/how-to-run-local-ai-coding-on-mac-for-free-opencode-lm-studio/"><div class="th"><img src="https://i.ytimg.com/vi/AznjSh5IHFs/hqdefault.jpg" alt="Thumbnail: How to Run Local AI Coding on Mac for Free (OpenCode + LM Studio + Qwen)" loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>How to Run Local AI Coding on Mac for Free (OpenCode + LM Studio + Qwen)</h3><p>18 Oct 2026</p></div></a></div>
+  <p class="kicker reveal" style="margin-top:56px">// START HERE</p>
   <h2 class="reveal">The videos people watch most.</h2>
-  <div class="vids">
-    <a class="vid reveal" href="https://youtu.be/HW0RPmkJMgE"><div class="th"><img src="https://i.ytimg.com/vi/HW0RPmkJMgE/hqdefault.jpg" alt="" loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>Local LLM vibe coding on a MacBook Pro M5: the honest truth</h3><p>The test that started the channel</p></div></a>
-    <a class="vid reveal" href="https://youtu.be/AznjSh5IHFs"><div class="th"><img src="https://i.ytimg.com/vi/AznjSh5IHFs/hqdefault.jpg" alt="" loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>How to run local AI coding on Mac for free</h3><p>4-minute setup guide</p></div></a>
-    <a class="vid reveal" href="https://youtu.be/Prww8NdNQIo"><div class="th"><img src="https://i.ytimg.com/vi/Prww8NdNQIo/hqdefault.jpg" alt="" loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>Qwen 3.8 27B: stuck 82 minutes, then built Minecraft</h3><p>82 minutes stuck, then a working game</p></div></a>
+  <div class="vids"><a class="vid reveal" href="videos/local-llm-vibe-coding-on-macbook-pro-m5-the-honest-truth-qwen-3/"><div class="th"><img src="https://i.ytimg.com/vi/HW0RPmkJMgE/hqdefault.jpg" alt="Thumbnail: Local LLM Vibe Coding on Macbook pro M5 — The Honest Truth Qwen 3.6 35B A3B + oMLX + continue dev" loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>Local LLM Vibe Coding on Macbook pro M5 — The Honest Truth Qwen 3.6 35B A3B + oMLX + continue dev</h3><p>8,663 views</p></div></a><a class="vid reveal" href="videos/i-tested-gemma-4-12b-on-a-32gb-m5-coding-vision-full-stress-test/"><div class="th"><img src="https://i.ytimg.com/vi/GJT6LhpLsTs/hqdefault.jpg" alt="Thumbnail: I Tested Gemma 4 12B on a 32GB M5 — Coding, Vision, Full Stress Test" loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>I Tested Gemma 4 12B on a 32GB M5 — Coding, Vision, Full Stress Test</h3><p>6,174 views</p></div></a><a class="vid reveal" href="videos/i-was-wrong-about-local-llm-vs-claude-on-m5-macbook-pro-tested/"><div class="th"><img src="https://i.ytimg.com/vi/ufPr1XpLRMY/hqdefault.jpg" alt="Thumbnail: I Was WRONG About Local LLM vs Claude on M5 macbook pro — TESTED | qwen 3.6 35b, 27b, and gtp oss" loading="lazy"><div class="play"><i></i></div></div><div class="t"><h3>I Was WRONG About Local LLM vs Claude on M5 macbook pro — TESTED | qwen 3.6 35b, 27b, and gtp oss</h3><p>3,450 views</p></div></a></div>
+  <div class="ctas reveal" style="margin-top:34px"><a class="btn" href="videos/">See all 26 tests + Shorts</a><a class="ghost" href="https://www.youtube.com/@IamVikramjit?sub_confirmation=1">Subscribe on YouTube</a></div>
+</div></section>
+
+<section class="sec solid-bg" id="instagram"><div class="wrap">
+  <p class="kicker reveal">// ON INSTAGRAM</p>
+  <h2 class="reveal">A new test every day, in 60 seconds.</h2>
+  <p class="sec-lede reveal">Short versions of every test on <a href="https://www.instagram.com/iam.vikramjit/" style="color:var(--copper-hi)">@iam.vikramjit</a>. Follow, or Instagram may never show you the next one.</p>
+  <div class="reels" id="reelbox">
+    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/De_FFTjht1E/" data-instgrm-version="14"><a href="https://www.instagram.com/reel/De_FFTjht1E/">Watch this reel on Instagram</a></blockquote>
+    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DewkrDDBqzk/" data-instgrm-version="14"><a href="https://www.instagram.com/reel/DewkrDDBqzk/">Watch this reel on Instagram</a></blockquote>
+    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DeuNmB_gSHw/" data-instgrm-version="14"><a href="https://www.instagram.com/reel/DeuNmB_gSHw/">Watch this reel on Instagram</a></blockquote>
   </div>
+  <div class="ctas reveal" style="margin-top:30px"><a class="btn" href="https://www.instagram.com/iam.vikramjit/">Follow @iam.vikramjit</a><a class="ghost" href="videos/#reels">More reels</a><a class="ghost" href="https://www.facebook.com/IamVikramjit">Facebook · IamVikramjit</a></div>
 </div></section>
 
 
@@ -448,7 +464,7 @@
   <p class="kicker">// DON'T MISS THE NEXT TEST</p>
   <h2>Watch the next test.</h2>
   <a class="btn" href="https://www.youtube.com/@IamVikramjit?sub_confirmation=1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8zM9.7 15.1V8.9l5.8 3.1-5.8 3.1z"/></svg>Subscribe on YouTube</a>
-  <div class="socials"><a class="ghost" href="https://www.instagram.com/iam.vikramjit/">Instagram · @iam.vikramjit</a><a class="ghost" href="https://x.com/VikramjitSarkar">X · @VikramjitSarkar</a></div>
+  <div class="socials"><a class="ghost" href="https://www.instagram.com/iam.vikramjit/">Instagram · @iam.vikramjit</a><a class="ghost" href="https://x.com/VikramjitSarkar">X · @VikramjitSarkar</a><a class="ghost" href="https://www.facebook.com/IamVikramjit">Facebook · IamVikramjit</a><a class="ghost" href="videos/">All videos</a></div>
   <p class="fine">Every number here is from my own runs. If yours differ, tell me your Mac and RAM in the comments.</p>
 </div></footer>
 </main>
@@ -563,7 +579,7 @@ const halo = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 6.4), new THREE.MeshBas
 halo.position.set(0, .7, -.3); me.add(halo);
 const ringM = new THREE.Mesh(new THREE.TorusGeometry(2.4, .014, 8, 180), new THREE.MeshBasicMaterial({ color: C.hi, transparent: true, opacity: .55 }));
 ringM.position.set(0, .7, -.2); me.add(ringM);
-const photo = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ transparent: true, alphaTest: .5 }));
+const photo = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ transparent: true, alphaTest: .02 }));
 me.add(photo);
 const ICON = {};
 ['qwen-color', 'gemma-bright', 'apple-light'].forEach(n => { const im = new Image(); im.src = `icons/${n}.svg`; ICON[n] = im; });
@@ -736,7 +752,7 @@ function frame() {
 // ---------------- boot ----------------
 const bootN = document.getElementById('bootn');
 gsap.to({ v: 0 }, { v: 100, duration: 1.2, ease: 'power2.inOut', onUpdate() { bootN.textContent = Math.round(this.targets()[0].v) + '%'; } });
-new THREE.TextureLoader().load('portrait_laptop.webp', tex => {
+new THREE.TextureLoader().load('me_suit_smile.webp', tex => {
   tex.colorSpace = THREE.SRGBColorSpace; photo.material.map = tex; photo.material.needsUpdate = true;
   layout(); drawScreen(0); frame();
   setTimeout(() => {
@@ -772,5 +788,6 @@ document.querySelectorAll('.track').forEach((t, i) => { const bar = t.querySelec
     onUpdate: () => cards.forEach(c => { const b = c.getBoundingClientRect(), d = (b.left + b.width / 2 - innerWidth / 2) / innerWidth;
       const q = Math.max(-1, Math.min(1, d)); c.style.transform = `perspective(1200px) rotateY(${-q * 28}deg) scale(${1 - Math.abs(q) * .12})`; }) } }); })();
 </script>
+<script>new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){o.disconnect();const s=document.createElement('script');s.async=true;s.src='https://www.instagram.com/embed.js';document.body.appendChild(s);}},{rootMargin:'800px'}).observe(document.getElementById('reelbox'));</script>
 </body>
 </html>
